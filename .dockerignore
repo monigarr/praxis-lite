@@ -1,0 +1,13 @@
+# Docker ignore for PRAXIS Lite
+.git
+.gitignore
+.env
+.env.*
+*.md
+docs/
+*.log
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+.cache/

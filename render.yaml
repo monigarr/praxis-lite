@@ -1,0 +1,29 @@
+# Render Blueprint for PRAXIS Lite
+# https://render.com/docs/blueprint-spec
+# Primary: GitLab https://labs.gauntletai.com/monicapeters/praxis-lite
+# Mirror: https://github.com/monigarr/praxis-lite
+
+services:
+  - type: web
+    name: praxis-lite
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    autoDeploy: true
+    branch: main
+    repo: https://labs.gauntletai.com/monicapeters/praxis-lite
+    envVars:
+      - key: PRAXIS_ENV
+        value: production
+    # Add health check, scaling etc when app ready
+
+  # Example static site (uncomment/adapt for frontend-react when added)
+  # - type: static
+  #   name: praxis-lite-dashboard
+  #   buildCommand: npm ci && npm run build
+  #   staticPublishPath: ./dist
+  #   branch: main
+  #   repo: https://labs.gauntletai.com/monicapeters/praxis-lite
+  #   envVars:
+  #     - key: VITE_PRAXIS_API_BASE_URL
+  #       sync: false

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confidential Praxis Project Plan</title>
+<style>
+  :root { --ink:#000; --muted:#555; --h1:#1F4E79; --h2:#2E75B6; --h3:#5B9BD5;
+    --line:#cccccc; --bg:#f3f4f6; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+    font-family:Arial,"Helvetica Neue",sans-serif; line-height:1.55; }
+  .page { max-width:850px; margin:0 auto; padding:60px 64px 96px;
+    background:#fff; box-shadow:0 1px 40px rgba(0,0,0,.08); min-height:100vh; }
+  h1,h2,h3,h4,h5,h6 { font-family:Arial,"Helvetica Neue",sans-serif; line-height:1.25;
+    font-weight:700; margin:1.4em 0 .4em; }
+  h1 { font-size:2em; color:var(--h1); margin-top:.2em; }
+  h2 { font-size:1.5em; color:var(--h2); border-bottom:1px solid var(--line); padding-bottom:.15em; }
+  h3 { font-size:1.2em; color:var(--h3); }
+  h4 { font-size:1.05em; color:var(--h2); }
+  p { margin:.55em 0; }
+  p.spacer { margin:.2em 0; }
+  a { color:#0563C1; }
+  ul,ol { margin:.4em 0 .8em; padding-left:1.6em; }
+  li { margin:.2em 0; }
+  table { border-collapse:collapse; width:100%; margin:1.1em 0; font-size:.95em; }
+  td { border:1px solid var(--line); padding:7px 11px; text-align:left; vertical-align:top; }
+  .img { text-align:center; }
+  .img img { max-width:100%; height:auto; }
+  .confidential { font-size:.72em; letter-spacing:.18em; text-transform:uppercase;
+    color:#c9211e; border:1px solid #c9211e; display:inline-block; padding:4px 10px;
+    border-radius:3px; margin-bottom:24px; font-weight:700; }
+  .highlight-box { background:#f0f7ff; border-left:4px solid #2E75B6; padding:12px 16px; margin:1em 0; }
+  .deployment-box { background:#f5f0e8; border-left:4px solid #c98a2e; padding:12px 16px; margin:1em 0; }
+  .scrum-box { background:#e8f4fd; border-left:4px solid #1F4E79; padding:12px 16px; margin:1em 0; }
+  @media print {
+    @page { size: A4 portrait; margin: 14mm; }
+    html, body { background:#fff; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page { box-shadow:none; max-width:none; width:100%; margin:0; padding:0; min-height:0; }
+    h1, h2, h3, h4 { break-after: avoid; page-break-after: avoid; }
+    table, tr, td { break-inside: avoid; page-break-inside: avoid; }
+    figure.praxis-diagram { break-inside: avoid; page-break-inside: avoid; }
+    ul, li { break-inside: avoid; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+<div class="confidential">Confidential</div>
+<h1>PRAXIS Project Plan</h1>
+<p><span style="color:#555555"><em>Self-Improving Knowledge Loop for Claude Code Agents  •  9-Day Focused Sprint</em></span></p>
+
+<h2>Team Members &amp; Leadership Roles</h2>
+<p>Three Gauntlet AI Fellows collaborating on a production-grade capstone. Each member leads one distinct, high-impact aspect of the project to enable authentic technical interview storytelling.</p>
+<table>
+<tr>
+<td style="background:#1F4E79;border-color:#2E75B6"><span style="color:#FFFFFF"><strong>Matthew Daw</strong></span></td>
+<td style="background:#2E75B6;border-color:#2E75B6"><span style="color:#FFFFFF"><strong>Monica Peters</strong></span></td>
+<td style="background:#5B9BD5;border-color:#2E75B6"><span style="color:#FFFFFF"><strong>Dominic Antonelli</strong></span></td>
+</tr>
+<tr>
+<td style="background:#E8F4FD;border-color:#CCCCCC;width:33%"><span style="color:#1F4E79"><strong>ML &amp; Knowledge Pipeline Lead</strong></span><br>Ingestion, learning moment detection (ML classifier), LLM distillation, consolidation/dedup/scoring, knowledge graph, provenance.<br><em><strong>Interview claim: </strong></em><em>"I led the ML-powered distillation engine that turns raw JSONL logs into scored, deduplicated, human-approved knowledge with full provenance."</em></td>
+<td style="background:#E8F4FD;border-color:#CCCCCC;width:31%"><span style="color:#2E75B6"><strong>Dashboard &amp; Human Gate Lead</strong></span><br>React human-gate dashboard (<code>frontend-react/</code>) plus Python contract layer (<code>frontend/</code>), approval workflow (proposed→suggested→active), contradiction resolution UI, credibility metrics viz, injection controls.<br><em><strong>Interview claim: </strong></em><em>"I led the design and built the human approval dashboard that enforces quality gates and makes knowledge promotion transparent and measurable."</em></td>
+<td style="background:#E8F4FD;border-color:#CCCCCC;width:36%"><span style="color:#5B9BD5"><strong>Architecture, Eval &amp; Integration Lead</strong></span><br>System design, eval harness (fixed tasks + metrics), GitHub hook/PR automation, Python tooling, deployment, live demo &amp; compounding curve proof.<br><em><strong>Interview claim: </strong></em><em>"I architected the eval harness and integration layer that rigorously proves PRAXIS delivers ≥50% fewer corrections with compounding gains."</em></td>
+</tr>
+</table>
+
+<div class="scrum-box">
+<h4 style="margin-top:0;">🗓️ Monica Peters — Scrum Master</h4>
+<p><strong>Daily Scrum:</strong> Every weekday at 10:00 AM</p>
+<p><strong>Agenda:</strong></p>
+<ul style="margin:4px 0 0 20px;">
+<li><strong>Completed:</strong> What work was finished since last scrum</li>
+<li><strong>Current:</strong> What's being worked on today</li>
+<li><strong>Future:</strong> What's planned for next</li>
+<li><strong>Blockers:</strong> Any impediments preventing progress</li>
+</ul>
+<p><strong>Note:</strong> Monica builds the <strong>Lite version</strong> of the full system that Dominic and Matthew are building in parallel — a working, deployable subset that demonstrates the core loop end-to-end.</p>
+</div>
+
+<h2>Project Overview</h2>
+<p>PRAXIS turns Claude Code's session history into a queryable <strong>Knowledge Graph</strong> — the project's source of truth and primary deliverable — so the agent stops re-learning the same things. As Claude Code works across ~20 projects, its session messages stream into a DynamoDB store. A <em>learning moment</em> — a pull request, or an insight a user inserts via a Claude tool — fires a trigger; the related session and GitHub context is then distilled by an LLM into structured candidates. Candidates are clustered, deduped, scored, and decayed, with a human stepping in only to approve 100%-credible insertions or resolve contradictions. Approved knowledge lands in the Knowledge Graph. Future sessions pull just-in-time context from it through a <strong>"get context" tool call</strong> — a Python function that reads the session history, the current codebase, and the graph, and returns a focused block of context to inject into the conversation. A Knowledge Graph Dashboard gives visibility and optional editing, and a rigorous eval harness replays known PR/ticket tasks cold vs. knowledge-injected to quantify the compounding gains.</p>
+
+<div class="highlight-box">
+<h4 style="margin-top:0;">🎯 Capstone Alignment (PRD)</h4>
+<p><strong>Three project directions satisfied:</strong></p>
+<ul style="margin:4px 0 0 20px;">
+<li><strong>Combine ML with LLM:</strong> Classical ML (HDBSCAN clustering, confidence scoring) pairs with LLM distillation</li>
+<li><strong>Different take on agents:</strong> Shared agent works through a team, humans verify — the <em>substrate</em> improves while agents stay stateless</li>
+<li><strong>One problem, many approaches:</strong> Knowledge retrieval benchmarked across markdown/skills, vector RAG, knowledge graph, and RAG+rerank</li>
+</ul>
+</div>
+
+<h2>System Architecture</h2>
+<p>Claude Code streams its session messages into a DynamoDB log store. A learning moment — a pull request, or a user-inserted insight — fires the <strong>Trigger</strong>, which gathers the related session and GitHub context and hands it to LLM distillation. Distilled candidates are consolidated, scored, and gated (humans intervene only for fully-credible insertions or contradictions) before entering the <strong>Knowledge Graph</strong>. Claude Code reads the graph back through the "get context" tool call, and the Eval Harness measures cold vs. knowledge-injected runs.</p>
+
+<figure class="praxis-diagram" style="margin:1.2em 0;">
+<!-- Editable architecture diagram. Boxes = <foreignObject> with normal HTML inside; arrows = <path>. -->
+<!-- To move a box: change its <g> data and the rect/foreignObject x/y. To re-route an arrow: edit its path d="..." coordinates. ViewBox is 0 0 880 660. -->
+<svg viewBox="0 0 880 660" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:Arial,Helvetica,sans-serif;">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5a5a5a"/>
+    </marker>
+    <marker id="arrow-inject" markerWidth="10" markerHeight="8" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#bf8a2e"/>
+    </marker>
+    <style>
+      .praxis-diagram .box { color:#fff; height:100%; box-sizing:border-box; padding:8px 11px;
+        font-size:11px; line-height:1.3; overflow:hidden; }
+      .praxis-diagram .box .t { font-weight:700; font-size:13px; display:block; margin-bottom:3px; }
+      .praxis-diagram .box .s { font-size:10px; opacity:.95; }
+      .praxis-diagram .box ul { margin:2px 0 0; padding-left:14px; }
+      .praxis-diagram .box li { margin:1px 0; }
+      .praxis-diagram .arrow { stroke:#5a5a5a; stroke-width:2; fill:none; }
+      .praxis-diagram .arrow.inject { stroke:#bf8a2e; stroke-dasharray:5 4; }
+      .praxis-diagram .arrow.loop { stroke:#3c3a66; stroke-width:2.5; }
+      .praxis-diagram .lbl { font-size:10px; fill:#444; font-style:italic; }
+    </style>
+  </defs>
+
+  <!-- Title -->
+  <text x="440" y="30" text-anchor="middle" font-size="20" font-weight="700" fill="#1a1a1a">PRAXIS Architecture: Self-Improving Knowledge Loop for AI Coding Agents</text>
+
+  <!-- ============ ARROWS (draw under boxes) ============ -->
+  <!-- sources stream into the raw data store (left column) -->
+  <path class="arrow" d="M217,206 L238,206" marker-end="url(#arrow)"/>            <!-- github -> learning moment detection -->
+  <path class="arrow" d="M114,344 L114,328" marker-end="url(#arrow)"/>            <!-- claude code -> session logs (upward) -->
+  <!-- github + session logs merge into Trigger, which feeds llm distillation -->
+  <path class="arrow" d="M217,228 C 232,250 238,273 248,273"/>   <!-- github -> trigger (no head) -->
+  <path class="arrow" d="M217,298 L248,280"/>                    <!-- session logs -> trigger (no head) -->
+  <path class="arrow" d="M330,288 L330,308" marker-end="url(#arrow)"/>                    <!-- trigger -> llm distillation -->
+  <!-- claude code -> github (wraps around the left, into github's bottom edge) -->
+  <path class="arrow" d="M12,405 C 4,398 4,250 32,243 L62,243 L62,236" marker-end="url(#arrow)"/>
+  <!-- claude code -> knowledge graph -->
+  <path class="arrow" d="M217,410 C 232,455 224,545 224,592 L238,592" marker-end="url(#arrow)"/>
+  <!-- knowledge graph -> claude code session logs (dotted feedback, into bottom-center) -->
+  <path class="arrow" style="stroke-dasharray:3 4" d="M238,612 C 160,617 114,560 114,470 L114,440" marker-end="url(#arrow)"/>
+  <text class="lbl" x="114" y="505" text-anchor="middle" style="paint-order:stroke;stroke:#ffffff;stroke-width:3px">get context tool call</text>
+  <!-- center pipeline; nothing points INTO learning moment detection -->
+  <path class="arrow" d="M330,246 L330,256" marker-end="url(#arrow)"/>            <!-- learning moment detection -> trigger -->
+  <path class="arrow" d="M403,392 L403,412" marker-end="url(#arrow)"/>            <!-- llm distillation -> consolidate -->
+  <!-- consolidate -> knowledge graph -> eval harness -->
+  <path class="arrow" d="M403,534 L403,554" marker-end="url(#arrow)"/>            <!-- consolidate -> knowledge graph -->
+  <path class="arrow" d="M568,592 L596,588" marker-end="url(#arrow)"/>            <!-- knowledge graph -> eval harness -->
+  <!-- knowledge graph -> knowledge graph dashboard (routed right of consolidate) -->
+  <path class="arrow" d="M568,585 C 582,575 582,430 582,400 L597,400" marker-end="url(#arrow)"/>
+
+  <!-- ============ BOXES ============ -->
+  <!-- Box 1: Session Logs (Claude logo inside) — below GitHub -->
+  <g>
+    <rect x="12" y="346" width="205" height="92" rx="8" fill="#2e7d8c"/>
+    <clipPath id="claudeClip"><rect x="18" y="368" width="48" height="48" rx="8"/></clipPath>
+    <image href="claude-logo.jpg" x="18" y="368" width="48" height="48" clip-path="url(#claudeClip)"/>
+    <foreignObject x="70" y="346" width="142" height="92">
+      <div xmlns="http://www.w3.org/1999/xhtml" class="box">
+        <span class="t">Claude Code</span>
+        <span class="s">AI coding agent across ~20 projects</span>
+      </div>
+    </foreignObject>
+  </g>
+
+  <!-- GitHub source (top of left column) -->
+  <g>
+    <rect x="12" y="178" width="205" height="56" rx="8" fill="#24292e"/>
+    <g transform="translate(22,190) scale(2.0)" fill="#ffffff">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+    </g>
+    <text x="62" y="204" fill="#ffffff" font-size="14" font-weight="700">GitHub</text>
+    <text x="62" y="221" fill="#cfd3d8" font-size="10">PR / issue / commit events</text>
+  </g>
+
+  <!-- Box 2: Raw Data Store (DynamoDB) — leftmost column -->
+  <g>
+    <rect x="12" y="252" width="205" height="74" rx="8" fill="#eaf2fb" stroke="#2E73B8" stroke-width="2"/>
+    <image href="dynamodb.png" x="18" y="266" width="48" height="44"/>
+    <foreignObject x="72" y="252" width="140" height="74">
+      <div xmlns="http://www.w3.org/1999/xhtml" class="box" style="color:#13314e">
+        <span class="t" style="color:#1c4e80">Claude Code Session Logs</span>
+        <span class="s">Session messages (JSONL) streamed to DynamoDB</span>
+      </div>
+    </foreignObject>
+  </g>
+
+  <!-- Box 3: Learning Moment Detection -->
+  <g>
+    <rect x="238" y="140" width="330" height="106" rx="8" fill="#4f7d5a"/>
+    <foreignObject x="238" y="140" width="330" height="106">
+      <div xmlns="http://www.w3.org/1999/xhtml" class="box">
+        <span class="t">Learning Moment Detection</span>
+        <ul>
+          <li>User corrections &amp; failure→fix transitions</li>
+          <li>Explicit preferences</li>
+          <li>Cross-session rediscovery</li>
+        </ul>
+        <span class="s">Heuristics | Trained ML Classifier | LLM Tagging</span>
+      </div>
+    </foreignObject>
+  </g>
+
+  <!-- Trigger node (merge of github + claude code session logs) -->
+  <g>
+    <rect x="250" y="258" width="160" height="30" rx="8" fill="#c98a2e"/>
+    <text x="330" y="278" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">Trigger</text>
+  </g>
+
+  <!-- Box 4: LLM Distillation -->
+  <g>
+    <rect x="238" y="310" width="330" height="80" rx="8" fill="#8fa83f"/>
+    <foreignObject x="238" y="310" width="330" height="80">
+      <div xmlns="http://www.w3.org/1999/xhtml" class="box">
+        <span class="t">LLM Distillation → Structured Candidate</span>
+        <span class="s">{when-it-applies, lesson, scope, evidence, form}. Extractive vs. Abstractive experiment (research favors extractive). Provenance linked to exact log line.</span>
+      </div>
+    </foreignObject>
+  </g>
+
+  <!-- Box 5: Consolidate / Score (with nested Human Approval Gate) -->
+  <g>
+    <rect x="238" y="414" width="330" height="120" rx="8" fill="#5d4f7d"/>
+    <foreignObject x="238" y="414" width="330" height="76">
+      <div xmlns="http://www.w3.org/1999/xhtml" class="box">
+        <span class="t">Consolidate • Score</span>
+        <span class="s">Cluster / Dedup (Embeddings + HDBSCAN) · confidence score (freq, recency, breadth) · contradiction detection · decay for stale lessons</span>
+      </div>
+    </foreignObject>
+    <!-- nested human approval gate -->
+    <rect x="250" y="490" width="306" height="38" rx="6" fill="#3c3a66"/>
+    <foreignObject x="250" y="490" width="306" height="38">
+      <div xmlns="http://www.w3.org/1999/xhtml" class="box" style="padding:5px 10px">
+        <span class="t" style="font-size:11px;margin-bottom:1px">Human Approval Gate</span>
+        <span class="s" style="font-size:9px">approve 100% credible ideas · resolve contradictions</span>
+      </div>
+    </foreignObject>
+  </g>
+
+  <!-- Box 6: Human Approval Dashboard -->
+  <g>
+    <rect x="598" y="360" width="270" height="70" rx="8" fill="#3c3a66"/>
+    <foreignObject x="598" y="360" width="270" height="70">
+      <div xmlns="http://www.w3.org/1999/xhtml" class="box">
+        <span class="t">Knowledge Graph Dashboard</span>
+        <span class="s">proposed → suggested → active → decayed</span>
+      </div>
+    </foreignObject>
+  </g>
+
+  <!-- Eval Harness -->
+  <g>
+    <rect x="598" y="475" width="270" height="150" rx="8" fill="#b03832"/>
+    <foreignObject x="598" y="475" width="270" height="150">
+      <div xmlns="http://www.w3.org/1999/xhtml" class="box">
+        <span class="t">Eval Harness (Spine)</span>
+        <span class="s">Fixed quirky repo tasks. Cold run vs. injected-knowledge run.</span>
+        <ul>
+          <li>Metrics: corrections, repeated failures, tokens, time, success rate</li>
+          <li>Compounding curve: correction-rate falling across sessions</li>
+          <li>Success target: ~50% fewer corrections, no regression in success</li>
+        </ul>
+      </div>
+    </foreignObject>
+  </g>
+
+  <!-- Knowledge Graph -->
+  <g>
+    <rect x="238" y="556" width="330" height="72" rx="8" fill="#5b6e9c"/>
+    <foreignObject x="238" y="556" width="330" height="72">
+      <div xmlns="http://www.w3.org/1999/xhtml" class="box">
+        <span class="t">Knowledge Graph</span>
+        <span class="s">Knowledge Graph / Vector DB + generated CLAUDE.md / skills. Just-in-time disclosure (avoid lost-in-the-middle). Provenance preserved.</span>
+      </div>
+    </foreignObject>
+  </g>
+</svg>
+</figure>
+<p><span style="color:#555555"><em>Figure 1: PRAXIS End-to-End Architecture — Claude Code sessions and pull requests become a verified Knowledge Graph, read back into future sessions via a get-context tool call, with measurable compounding gains.</em></span></p>
+
+<div class="deployment-box">
+<h4 style="margin-top:0;">🚀 Deployment Strategy — Simple, Economic, Transferable</h4>
+<p><strong>Objective:</strong> Deploy to <strong>Render.com</strong> with the simplest, most economical (free tier) resources that any engineering team can take ownership of.</p>
+
+<p><strong>Deployment Options:</strong></p>
+<ul style="margin:4px 0 0 20px;">
+<li><strong>Primary:</strong> Deploy to Render.com using free tier resources</li>
+<li><strong>Alternative:</strong> Local deployment via Docker Compose</li>
+<li><strong>Data:</strong> SQLite (local) or PostgreSQL (Render) — no external data services required</li>
+<li><strong>Models:</strong> Local models via Ollama or OpenAI API (bring-your-own-key)</li>
+<li><strong>Infrastructure:</strong> Single-container deployment for the entire stack</li>
+</ul>
+
+<p><strong>Development Environment:</strong></p>
+<ul style="margin:4px 0 0 20px;">
+<li>Built with <strong>Cursor</strong> and frontier models on Windows laptop</li>
+<li>Tested and viewed locally with Python <strong>virtual environment</strong></li>
+<li><strong>Dockerfile</strong> provided for containerized local development</li>
+</ul>
+
+<p><strong>Lite Version (Monica's deliverable):</strong> A working, deployable subset demonstrating the end-to-end loop — ingestion → distillation → human approval → injection → measurement — that others can extend.</p>
+</div>
+
+<h2>Target Outcome &amp; Success Metrics</h2>
+<ul>
+<li><strong>MVP delivered:</strong> learning-moment detection → distillation → cluster/dedup/confidence → human gate (credible insertions &amp; contradictions only) → Knowledge Graph + get-context tool → Knowledge Graph Dashboard → eval harness showing quantified improvement.</li>
+<li><strong>Primary success criterion:</strong> ≥50% reduction in user corrections on benchmark tasks vs. cold runs, with no regression in task success rate, plus visible compounding curve across sessions.</li>
+<li>Each team member owns one pillar end-to-end and can demonstrate it live in technical interviews.</li>
+<li><strong>Lite version (Monica):</strong> A fully functional, deployable subset of the full system that demonstrates the core value proposition end-to-end.</li>
+</ul>
+
+<h2>High-Level 9-Day Timeline</h2>
+<p><strong>Days 1-2:</strong> Project Plan, Foundation &amp; Design  |  <strong>Days 3-5:</strong> Parallel Core Build (ML Pipeline + Dashboard + Evals)  |  <strong>Days 6-7:</strong> Integration &amp; Human Gate  |  <strong>Day 8:</strong> Eval Harness &amp; Measurement  |  <strong>Days 9-10:</strong> Demo Polish, Documentation &amp; Final Runs</p>
+
+<h1>Detailed 9-Day Work Schedule</h1>
+<p>All three contributors work in parallel streams with daily syncs. Primary ownership ensures clear leadership claims while cross-support builds team cohesion.</p>
+
+<table>
+<tr>
+<td style="background:#1F4E79;border-color:#2E75B6"><span style="color:#FFFFFF"><strong>Day</strong></span></td>
+<td style="background:#1F4E79;border-color:#2E75B6"><span style="color:#FFFFFF"><strong>Focus &amp; Milestones</strong></span></td>
+<td style="background:#2E75B6;border-color:#2E75B6"><span style="color:#FFFFFF"><strong>Matthew (ML/KG)</strong></span></td>
+<td style="background:#5B9BD5;border-color:#2E75B6"><span style="color:#FFFFFF"><strong>Monica (Dashboard + Lite)</strong></span></td>
+<td style="background:#70AD47;border-color:#2E75B6"><span style="color:#FFFFFF"><strong>Dominic (Arch/Eval)</strong></span></td>
+</tr>
+<tr>
+<td style="background:#F2F2F2;border-color:#CCCCCC"><strong>1</strong></td>
+<td style="border-color:#CCCCCC">Kickoff, repo setup, log exploration, architecture finalization</td>
+<td style="background:#E8F4FD;border-color:#CCCCCC">Explore sample JSONL logs; define episode segmentation heuristics</td>
+<td style="background:#FFF2CC;border-color:#CCCCCC">Repo setup, doc/plan drafts, dashboard wireframes &amp; tech stack (React — Python contract layer). Begin Lite version design.</td>
+<td style="background:#E2EFDA;border-color:#CCCCCC">Eval harness skeleton + fixed quirky repo tasks; GitHub hook design</td>
+</tr>
+<tr>
+<td style="background:#F2F2F2;border-color:#CCCCCC"><strong>2</strong></td>
+<td style="border-color:#CCCCCC">Design review, data contracts, first prototypes</td>
+<td style="background:#E8F4FD;border-color:#CCCCCC">Prototype learning-moment detector (pull requests + manual-insight tool)</td>
+<td style="background:#FFF2CC;border-color:#CCCCCC">Build review dashboard shell + candidate list view. Lite version scaffolding.</td>
+<td style="background:#E2EFDA;border-color:#CCCCCC">Define eval metrics &amp; cold-run baseline script</td>
+</tr>
+<tr>
+<td style="background:#F2F2F2;border-color:#CCCCCC"><strong>3</strong></td>
+<td style="border-color:#CCCCCC">Core pipeline build (parallel)</td>
+<td style="background:#E8F4FD;border-color:#CCCCCC">Full distillation pipeline + structured candidate output + provenance</td>
+<td style="background:#FFF2CC;border-color:#CCCCCC">Candidate detail view + confidence score UI components. Lite version: simplified pipeline.</td>
+<td style="background:#E2EFDA;border-color:#CCCCCC">Python tooling (reader, distiller wrapper) + basic injection</td>
+</tr>
+<tr>
+<td style="background:#F2F2F2;border-color:#CCCCCC"><strong>4</strong></td>
+<td style="border-color:#CCCCCC">ML &amp; consolidation focus</td>
+<td style="background:#E8F4FD;border-color:#CCCCCC">Embeddings + HDBSCAN dedup/cluster; contradiction detection logic</td>
+<td style="background:#FFF2CC;border-color:#CCCCCC">Human gate workflow UI (proposed → suggested → active). Lite version: deployable dashboard.</td>
+<td style="background:#E2EFDA;border-color:#CCCCCC">Eval harness: scripted PR/ticket recreation runs (throwaway artifacts, metrics only)</td>
+</tr>
+<tr>
+<td style="background:#F2F2F2;border-color:#CCCCCC"><strong>5</strong></td>
+<td style="border-color:#CCCCCC">Scoring, decay, dashboard polish</td>
+<td style="background:#E8F4FD;border-color:#CCCCCC">Confidence scoring (freq/recency/breadth) + decay rules</td>
+<td style="background:#FFF2CC;border-color:#CCCCCC">Contradiction resolution interface + credibility metrics viz. Lite version complete.</td>
+<td style="background:#E2EFDA;border-color:#CCCCCC">Eval harness expansion: token/time tracking + basic dashboard</td>
+</tr>
+<tr>
+<td style="background:#F2F2F2;border-color:#CCCCCC"><strong>6</strong></td>
+<td style="border-color:#CCCCCC">Integration sprint</td>
+<td style="background:#E8F4FD;border-color:#CCCCCC">End-to-end pipeline wiring + knowledge graph stub</td>
+<td style="background:#FFF2CC;border-color:#CCCCCC">Dashboard ↔ backend API integration + approval actions. Lite version: end-to-end working.</td>
+<td style="background:#E2EFDA;border-color:#CCCCCC">Full eval harness + cold vs injected comparison runner</td>
+</tr>
+<tr>
+<td style="background:#F2F2F2;border-color:#CCCCCC"><strong>7</strong></td>
+<td style="border-color:#CCCCCC">Human gate + injection complete</td>
+<td style="background:#E8F4FD;border-color:#CCCCCC">Knowledge Graph build + get-context tool (session history + codebase + graph → injected context)</td>
+<td style="background:#FFF2CC;border-color:#CCCCCC">Full human approval flow + provenance display in UI. Lite version: deploy to Render.com.</td>
+<td style="background:#E2EFDA;border-color:#CCCCCC">Eval harness recreates PRs/tickets per replay run (deleted after scoring); demo data prep</td>
+</tr>
+<tr>
+<td style="background:#F2F2F2;border-color:#CCCCCC"><strong>8</strong></td>
+<td style="border-color:#CCCCCC">Measurement &amp; refinement</td>
+<td style="background:#E8F4FD;border-color:#CCCCCC">Run batch evals; analyze failure modes; tune thresholds</td>
+<td style="background:#FFF2CC;border-color:#CCCCCC">Dashboard polish + edge-case handling in review flow. Lite version: final polish.</td>
+<td style="background:#E2EFDA;border-color:#CCCCCC">Full compounding curve measurement; identify demo quirks</td>
+</tr>
+<tr>
+<td style="background:#F2F2F2;border-color:#CCCCCC"><strong>9</strong></td>
+<td style="border-color:#CCCCCC">Demo, docs, handoff</td>
+<td style="background:#E8F4FD;border-color:#CCCCCC">Final pipeline tuning; knowledge quality report, Practice Presentation</td>
+<td style="background:#FFF2CC;border-color:#CCCCCC">Dashboard demo-ready; user flow video capture. Lite version: documentation + deployment guide.</td>
+<td style="background:#E2EFDA;border-color:#CCCCCC">Live demo script + side-by-side before/after; final docs &amp; repo handoff</td>
+</tr>
+</table>
+
+<h2>
