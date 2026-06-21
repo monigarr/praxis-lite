@@ -7,7 +7,7 @@
 
 services:
   # Static site: React 19 + Vite human-gate dashboard at praxis-lite.onrender.com
-  - type: static
+  - type: web
     name: praxis-lite
     rootDir: frontend-react
     buildCommand: npm ci && npm run build
