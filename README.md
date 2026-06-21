@@ -238,11 +238,10 @@ The repo includes a Render Blueprint (`render.yaml`).
 
 1. Connect the GitLab repo (or GitHub mirror) to Render.
 2. Render auto-detects `render.yaml` and provisions:
-   - `praxis-lite-dashboard` static site (React 19 + Vite, served from `frontend-react/dist`)
-   - `praxis-lite` web service (Docker placeholder, `starter` plan)
-3. Set required env vars in Render dashboard (see Configuration). `VITE_PRAXIS_API_BASE_URL` etc. apply to the dashboard; `PRAXIS_ENV` applies to the Docker service.
+   - `praxis-lite` static site (React 19 + Vite, served from `frontend-react/dist`)
+3. Set required env vars in Render dashboard (see Configuration). `VITE_PRAXIS_API_BASE_URL` etc. apply to the dashboard.
 
-**Note:** The Docker service is currently a placeholder (`python -m http.server`). The primary live URL is the static dashboard.
+**Note:** The Docker service has been removed from the blueprint. The live URL `https://praxis-lite.onrender.com/` now serves the React dashboard.
 
 ### Local Docker
 

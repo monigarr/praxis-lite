@@ -4,7 +4,7 @@
 
 This deployment guide is maintained for the solo `praxis-lite` project.
 
-The human-gate dashboard deploys as a **React static site** (`frontend-react/`). The root [`render.yaml`](../../render.yaml) now includes the dashboard as the primary static service (`praxis-lite-dashboard`).
+The human-gate dashboard deploys as a **React static site** (`frontend-react/`). The root [`render.yaml`](../../render.yaml) defines `praxis-lite` as the static service serving at https://praxis-lite.onrender.com/.
 
 ---
 
@@ -81,13 +81,13 @@ Open the preview URL; confirm mock candidates load and Act 2 flows work (filter 
 
 ### Live integration blueprint
 
-[`render.yaml`](../../render.yaml) declares **two** services:
+[`render.yaml`](../../render.yaml) declares a single static service:
 
 | Service | Type | Purpose |
 |---------|------|---------|
-| `praxis-lite-dashboard` | Static | React 19 + Vite SPA (rootDir: `frontend-react`, publish `./dist`) |
+| `praxis-lite` | Static | React 19 + Vite SPA (rootDir: `frontend-react`, publish `./dist`) serving at https://praxis-lite.onrender.com/ |
 
-(The Docker `praxis-lite` service remains as a placeholder until the backend is ready.)
+No Docker web service is included in the blueprint.
 
 **CORS:** The API allows `localhost` dev origins and `*.onrender.com` by default. Override with `PRAXIS_CORS_ORIGINS` or `PRAXIS_CORS_ORIGIN_REGEX` on the API service.
 
@@ -108,10 +108,10 @@ Leave `VITE_PRAXIS_API_BASE_URL` unset (or deploy static site without the API se
 
 ### Files
 
-- [`render.yaml`](../../render.yaml) — Root Render blueprint (includes `praxis-lite-dashboard` static site)
+- [`render.yaml`](../../render.yaml) — Root Render blueprint (defines `praxis-lite` static site)
 - [`frontend-react/.node-version`](../../frontend-react/.node-version) — Node 20 pin
 - [`frontend-react/.env.example`](../../frontend-react/.env.example) — local env template
 
-### Deprecated / Placeholder services
+### Blueprint notes
 
-The Docker `praxis-lite` service is a placeholder (`python -m http.server`). The active live URL is the `praxis-lite-dashboard` static site. Remove or disable any old non-static services in the Render dashboard if they conflict.
+The Docker web service has been removed from the blueprint. The live URL `https://praxis-lite.onrender.com/` serves the React dashboard. If any old non-static services remain in the Render dashboard, delete them to avoid conflicts.
