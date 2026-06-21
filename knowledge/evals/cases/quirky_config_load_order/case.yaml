@@ -1,0 +1,8 @@
+id: quirky_config_load_order
+description: "Agent resolves contradictory config load order lessons."
+seed_prompt: "Load configuration preferring environment variables over a local config file."
+seeded_insight:
+  path: direct_to_graph
+  content: "Environment variables take precedence over config files for secrets."
+deterministic_checks: []
+expected_outcome: pass

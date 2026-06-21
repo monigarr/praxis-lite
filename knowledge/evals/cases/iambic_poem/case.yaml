@@ -1,0 +1,9 @@
+id: iambic_poem
+description: "Agent writes iambic pentameter when seeded."
+seed_prompt: "Write a short poem in iambic pentameter about the moon."
+seeded_insight:
+  path: direct_to_graph
+  content: "Use strict iambic meter: unstressed-stressed alternation."
+deterministic_checks:
+  - iambic_poem
+expected_outcome: pass

@@ -1,0 +1,9 @@
+id: example_add_function
+description: "Agent should add a function; passes when graph contains the pattern."
+seed_prompt: "Write a Python function add(a, b) that returns the sum."
+seeded_insight:
+  path: direct_to_graph
+  content: "Always implement add(a, b) returning a + b."
+deterministic_checks:
+  - builds
+expected_outcome: pass
