@@ -29,7 +29,7 @@ Vite SPA served from Render's CDN — no server process, no cold-start sleep on 
 ### Dashboard setup
 
 1. **Render → New → Blueprint**
-2. Connect GitLab repo: `https://labs.gauntletai.com/monicapeters/praxis-lite.git`
+2. Connect GitHub repo: `https://github.com/monigarr/praxis-lite`
 3. Set **Blueprint Path** to `render.yaml`
 4. Confirm **Branch** is `monica/dashboard-human-gate` (blueprint sets this; override in Dashboard only if you rename the dev branch)
 5. Leave `VITE_PRAXIS_API_BASE_URL` unset for portfolio mock demo
