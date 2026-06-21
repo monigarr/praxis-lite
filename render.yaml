@@ -8,12 +8,11 @@
 services:
   # Static site: React 19 + Vite human-gate dashboard at praxis-lite.onrender.com
   - type: web
+    runtime: static
     name: praxis-lite
     rootDir: frontend-react
     buildCommand: npm ci && npm run build
     staticPublishPath: ./dist
-    branch: main
-    repo: https://github.com/monigarr/praxis-lite
     envVars:
       - key: VITE_PRAXIS_API_BASE_URL
         sync: false
@@ -21,3 +20,15 @@ services:
         sync: false
       - key: VITE_PRAXIS_ORG_ID
         value: default
+
+  # Backend: FastAPI PRAXIS Candidate API (Docker)
+  - type: web
+    name: praxis-api
+    env: docker
+    dockerfilePath: ./Dockerfile
+    rootDir: .
+    envVars:
+      - key: PRAXIS_AUTH_DISABLED
+        value: "1"
+      - key: PORT
+        value: "8000"
