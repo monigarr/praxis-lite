@@ -4,7 +4,7 @@
 
 This deployment guide is maintained for the solo `praxis-lite` project.
 
-The human-gate dashboard deploys as a **React static site** (`frontend-react/`). Blueprint at [`frontend-react/render.yaml`](../../frontend-react/render.yaml).
+The human-gate dashboard deploys as a **React static site** (`frontend-react/`). The root [`render.yaml`](../../render.yaml) now includes the dashboard as the primary static service (`praxis-lite-dashboard`).
 
 ---
 
@@ -85,10 +85,9 @@ Open the preview URL; confirm mock candidates load and Act 2 flows work (filter 
 
 | Service | Type | Purpose |
 |---------|------|---------|
-| `praxis-candidate-api` | Python web | FastAPI candidate + metrics API (`knowledge/serve`) |
-| `praxis-react-human-gate` | Static | Vite SPA wired via `fromService` → `VITE_PRAXIS_API_BASE_URL` |
+| `praxis-lite-dashboard` | Static | React 19 + Vite SPA (rootDir: `frontend-react`, publish `./dist`) |
 
-API-only deploy: use [`knowledge/serve/render.yaml`](../../knowledge/serve/render.yaml).
+(The Docker `praxis-lite` service remains as a placeholder until the backend is ready.)
 
 **CORS:** The API allows `localhost` dev origins and `*.onrender.com` by default. Override with `PRAXIS_CORS_ORIGINS` or `PRAXIS_CORS_ORIGIN_REGEX` on the API service.
 
@@ -99,7 +98,7 @@ API-only deploy: use [`knowledge/serve/render.yaml`](../../knowledge/serve/rende
 By default the Render API blueprint does not set database credentials — the API falls back to a JSON file store. For **persisted** promote/reject/resolve across restarts and hosts:
 
 1. Stand up RDS per [RDS_KG_DEPLOY.md](RDS_KG_DEPLOY.md) (CDK, AWS CLI, Secrets Manager, schema bootstrap).
-2. On the **`praxis-candidate-api`** Render service, set **`PRAXIS_DB_URL`** (copy DSN from Secrets Manager JSON).
+2. On the **`praxis-candidate-api`** Render service (when added), set **`PRAXIS_DB_URL`** (copy DSN from Secrets Manager JSON).
 3. Ensure the RDS security group allows connections from Render (see runbook §2 security notes).
 4. Dashboard env vars stay API-only — `VITE_PRAXIS_API_BASE_URL` only.
 
@@ -109,10 +108,10 @@ Leave `VITE_PRAXIS_API_BASE_URL` unset (or deploy static site without the API se
 
 ### Files
 
-- [`frontend-react/render.yaml`](../../frontend-react/render.yaml) — Render blueprint
+- [`render.yaml`](../../render.yaml) — Root Render blueprint (includes `praxis-lite-dashboard` static site)
 - [`frontend-react/.node-version`](../../frontend-react/.node-version) — Node 20 pin
 - [`frontend-react/.env.example`](../../frontend-react/.env.example) — local env template
 
-### Deprecated Streamlit service
+### Deprecated / Placeholder services
 
-The former **`praxis-human-gate`** Streamlit web service (`frontend/render.yaml`) has been removed from the repo. If it still exists in your Render dashboard, delete or disable it to avoid failed deploys.
+The Docker `praxis-lite` service is a placeholder (`python -m http.server`). The active live URL is the `praxis-lite-dashboard` static site. Remove or disable any old non-static services in the Render dashboard if they conflict.

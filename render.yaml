@@ -6,6 +6,23 @@
 # Mirror: https://github.com/monigarr/praxis-lite
 
 services:
+  # Static site: React 19 + Vite human-gate dashboard
+  - type: static
+    name: praxis-lite-dashboard
+    rootDir: frontend-react
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    branch: main
+    repo: https://github.com/monigarr/praxis-lite
+    envVars:
+      - key: VITE_PRAXIS_API_BASE_URL
+        sync: false
+      - key: VITE_PRAXIS_API_TOKEN
+        sync: false
+      - key: VITE_PRAXIS_ORG_ID
+        value: default
+
+  # Docker web service (placeholder until backend is ready)
   - type: web
     name: praxis-lite
     env: docker
@@ -18,14 +35,3 @@ services:
       - key: PRAXIS_ENV
         value: production
     # Add health check, scaling etc when app ready
-
-  # Example static site (uncomment/adapt for frontend-react when added)
-  # - type: static
-  #   name: praxis-lite-dashboard
-  #   buildCommand: npm ci && npm run build
-  #   staticPublishPath: ./dist
-  #   branch: main
-  #   repo: https://github.com/monigarr/praxis-lite
-  #   envVars:
-  #     - key: VITE_PRAXIS_API_BASE_URL
-  #       sync: false

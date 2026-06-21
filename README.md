@@ -238,11 +238,11 @@ The repo includes a Render Blueprint (`render.yaml`).
 
 1. Connect the GitLab repo (or GitHub mirror) to Render.
 2. Render auto-detects `render.yaml` and provisions:
-   - `praxis-lite` web service (Docker, `starter` plan, autoDeploy on `main`)
-3. Set required env vars in Render dashboard (see Configuration).
-4. (Future) Add static site for `frontend-react/` build.
+   - `praxis-lite-dashboard` static site (React 19 + Vite, served from `frontend-react/dist`)
+   - `praxis-lite` web service (Docker placeholder, `starter` plan)
+3. Set required env vars in Render dashboard (see Configuration). `VITE_PRAXIS_API_BASE_URL` etc. apply to the dashboard; `PRAXIS_ENV` applies to the Docker service.
 
-**Current limitation:** Dockerfile is a placeholder. Update `CMD` to `uvicorn knowledge.serve.app:app --host 0.0.0.0 --port $PORT` once the service is primary.
+**Note:** The Docker service is currently a placeholder (`python -m http.server`). The primary live URL is the static dashboard.
 
 ### Local Docker
 
