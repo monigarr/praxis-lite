@@ -1,10 +1,10 @@
 # PRAXIS Repository Audit
 
-**Audit date:** 2026-06-18 (EOD refresh for `frontend-react/`)  
+**Audit date:** 2026-06-21 (aligned to praxis-lite; future-work and ideation docs removed)  
 **Branch:** `monica/dashboard-human-gate`  
 **Sync:** up to date with `origin/monica/dashboard-human-gate`  
-**Auditor scope:** Full-repo health, docs/code alignment, integration readiness, test posture  
-**Source of truth:** [docs/PRAXIS_Project_Plan.html](docs/PRAXIS_Project_Plan.html), [README.md](README.md)
+**Auditor scope:** Full-repo health, docs/code alignment, integration readiness, test posture (praxis-lite scope)  
+**Source of truth:** [docs/plans/PRAXIS_Project_Plan.html](docs/plans/PRAXIS_Project_Plan.html), [README.md](README.md)
 
 ---
 
@@ -36,7 +36,7 @@ Sprint Day 1 = 2026-06-16 (Wed)
 Today        = 2026-06-18 (Thu — skipped work day per plan; audit run on dev branch)
 Integration  = Days 6–7 target (2026-06-23 – 2026-06-24)
 Internal     = Days 9–10 freeze/practice (2026-06-26 – 2026-06-27)
-Showcase     = Gauntlet live demo Mon 2026-06-29 (see docs/monica/PLAN_ALIGNMENT_GAP_CHECKLIST.md)
+Showcase     = Gauntlet live demo Mon 2026-06-29 (see PLAN_ALIGNMENT_GAP_CHECKLIST.md)
 ```
 
 This audit reflects the tree on `monica/dashboard-human-gate` after syncing with `origin/main`. It is a point-in-time snapshot, not a merge request.
@@ -240,7 +240,7 @@ Or document that all contributors must run frontend tests from `frontend/` with 
 | Lint (ruff/eslint) | ❌ Not configured |
 | Render deploy | ✅ `frontend-react/render.yaml` for portfolio mock |
 
-`docs/monica/DAYS_9_10_REMAINING.md` lists optional GitLab CI for `frontend/tests/` when repo CI is live.
+`DAYS_9_10_REMAINING.md` lists optional GitLab CI for `frontend/tests/` when repo CI is live.
 
 ---
 
@@ -261,11 +261,11 @@ Or document that all contributors must run frontend tests from `frontend/` with 
 | Document | Alignment with code |
 |----------|---------------------|
 | `README.md` | ✅ Layout reflects `knowledge/`, `session-capture/`, `frontend-react/` |
-| `docs/monica/ARCHITECTURE_MONICA.md` | ✅ Accurate for dashboard; canonical paths `knowledge/` |
-| `docs/monica/PLAN_ALIGNMENT_GAP_CHECKLIST.md` | ✅ Team operating doc — sprint gaps, demo calendar |
-| `docs/monica/STANDUP_TEMPLATE.md` | ✅ Daily Scrum Master standup template |
+| `ARCHITECTURE_MONICA.md` | ✅ Accurate for dashboard; canonical paths `knowledge/` |
+| `PLAN_ALIGNMENT_GAP_CHECKLIST.md` | ✅ Team operating doc — sprint gaps, demo calendar |
+| `STANDUP_TEMPLATE.md` | ✅ Daily Scrum Master standup template |
 | `docs/integration/*` | ✅ Matches client implementation |
-| `docs/monica/DEMO_SCRIPT.md` | ✅ Actionable for mock rehearsal |
+| `DEMO_SCRIPT.md` | ✅ Actionable for mock rehearsal |
 | `session-capture/README.md` | ✅ Matches Go layout |
 
 ---
@@ -283,7 +283,7 @@ Or document that all contributors must run frontend tests from `frontend/` with 
 4. **Dominic:** Stand up eval metrics GET endpoint per `eval-metrics-v1.md`.
 5. **Add GitLab CI** — at minimum: `pytest` (knowledge + frontend), optional Go test job.
 6. **Run live integration smoke** — `PRAXIS_API_BASE_URL` + promote/resolve against real server; document results in MR.
-7. **Complete manual demo checklist** in `docs/monica/DAYS_9_10_REMAINING.md`.
+7. **Complete manual demo checklist** in `DAYS_9_10_REMAINING.md`.
 
 ### P2 — Polish / tech debt
 
@@ -352,8 +352,8 @@ cd ../session-capture/wrapper; go build -o claude+ ./cmd/claude-plus
 
 | Document | Use |
 |----------|-----|
-| [docs/monica/PLAN_ALIGNMENT_GAP_CHECKLIST.md](docs/monica/PLAN_ALIGNMENT_GAP_CHECKLIST.md) | Gap checklist, freeze gates, eval backlog |
-| [docs/monica/STANDUP_TEMPLATE.md](docs/monica/STANDUP_TEMPLATE.md) | Daily standup (Scrum Master) |
+| [PLAN_ALIGNMENT_GAP_CHECKLIST.md](PLAN_ALIGNMENT_GAP_CHECKLIST.md) | Gap checklist, freeze gates, eval backlog |
+| [STANDUP_TEMPLATE.md](STANDUP_TEMPLATE.md) | Daily standup (Scrum Master) |
 | [docs/PRAXIS_GAP_CHECKLIST_DAYS3-9.md](docs/PRAXIS_GAP_CHECKLIST_DAYS3-9.md) | Redirect to PLAN_ALIGNMENT |
 
 *Generated as part of local dev session on 2026-06-18. Update this file when integration milestones land.*

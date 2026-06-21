@@ -76,11 +76,21 @@ Coding agents are less amnesiac than they used to be, but durable knowledge stil
 
 PRAXIS treats that exhaust as a compounding asset.
 
+### Capstone Alignment (PRD)
+
+See the **🎯 Capstone Alignment (PRD)** highlight box in [docs/plans/PRAXIS_Project_Plan.html](docs/plans/PRAXIS_Project_Plan.html) for the three capstone directions satisfied by this project:
+
+- **Combine ML with LLM:** Classical ML (HDBSCAN clustering, confidence scoring) pairs with LLM distillation
+- **Different take on agents:** Shared agent works through a team, humans verify — the *substrate* improves while agents stay stateless
+- **One problem, many approaches:** Knowledge retrieval benchmarked across markdown/skills, vector RAG, knowledge graph, and RAG+rerank
+
 ---
+
+
 
 ## Implementation status
 
-Point-in-time snapshot as of **2026-06-20** (Sprint Day 4). Live gap tracker: [docs/monica/PLAN_ALIGNMENT_GAP_CHECKLIST.md](docs/monica/PLAN_ALIGNMENT_GAP_CHECKLIST.md). See [AUDIT.md](AUDIT.md) for the Jun 18 repo health review (partially stale on Candidate API — now shipped with auth + multi-tenant orgs).
+Point-in-time snapshot as of **2026-06-21** (aligned to praxis-lite). Live gap tracker: [PLAN_ALIGNMENT_GAP_CHECKLIST.md](PLAN_ALIGNMENT_GAP_CHECKLIST.md). See [AUDIT.md](AUDIT.md) for repo health review.
 
 | Area | Path | Owner | Status |
 |------|------|-------|--------|
@@ -88,15 +98,17 @@ Point-in-time snapshot as of **2026-06-20** (Sprint Day 4). Live gap tracker: [d
 | Dashboard contract layer (Python) | `frontend/` | Monica Peters | **Shipped** — mock fixtures, contract v1 reference client, pytest contract tests |
 | Knowledge substrate | `knowledge/` | Matthew Daw | **Foundation** — in-memory + pgvector graphs, prompt ingestor, whole-file reader, write-policy (dedupe/redact/conflict), OpenRouter LLM/embedder seam, wiring factory |
 | Eval harness | `knowledge/evals/` | Dominic Antonelli | **Partial** — 69 YAML cases, deterministic checks, real Claude Code runner + offline FakeRunner |
-| Session capture | `session-capture/` | Dominic Antonelli | **Working** — Go `claude+` PTY daemon, JSONL tailer, DynamoDB writer |
-| Cloud infra | `infra/` | Matthew Daw | **Scaffolded** — AWS CDK: DynamoDB sessions, RDS PostgreSQL 16/pgvector KG, Cognito user pool, App Runner backend, CloudFront frontend, Phoenix tracing |
+| Session capture | `session-capture/` | Dominic Antonelli | **Not present in this lite checkout** — planned for full system; lite focuses on core loop (JSONL → candidates → human gate → KG) |
+| Cloud infra | `infra/` | Matthew Daw | **Not present in this lite checkout** — planned for full system; Render blueprints exist in `frontend-react/render.yaml` |
 | Candidate REST API | `knowledge/serve/` | Matthew Daw | **Shipped** — FastAPI contract v1; full CRUD; JSON store or Postgres via `PRAXIS_DB_URL`; Cognito-JWT auth + multi-tenant orgs |
 | Auth & multi-tenancy | `knowledge/serve/` (`auth.py`, `orgs_store.py`) | Matthew Daw | **Shipped** — Cognito JWT verification, per-user tenancy, password-gated orgs; `PRAXIS_AUTH_DISABLED=1` dev seam |
-| Hosting | `infra/`, `Dockerfile`, `render.yaml` | Matthew Daw | **Shipped** — AWS App Runner + CloudFront (CDK) and Render blueprints for API + React site |
+| Hosting | `Dockerfile`, `render.yaml` (frontend-react) | Matthew Daw | **Render blueprints present** — AWS App Runner + CloudFront (CDK) live in the parallel full-system repo |
 | Eval metrics endpoint | `knowledge/serve/` (`GET /metrics`) | Dominic Antonelli | **Fixture only** — contract v1 documented; dashboard embed ready; real batch data pending |
 | CI pipeline | — | Team | **Not yet** — manual test runs only |
 
 **Integration posture:** The dashboard runs fully offline when `PRAXIS_API_BASE_URL` is unset. Set env vars per [docs/integration/wire-up.md](docs/integration/wire-up.md) to wire live backend and eval metrics without code changes.
+
+**Lite repo scope:** This checkout (`praxis-lite`) demonstrates the core loop end-to-end (ingest → distill → human gate → promote → KG → get-context) using local mocks + Render blueprints. Full-system components (`session-capture/`, `infra/` CDK, Go PTY daemon) live in the parallel non-lite work and are intentionally absent here.
 
 **Critical path (Jun 29 demo):** Matthew pipeline (JSONL → candidates → promote→KG) and Dominic measurement spine (cold vs injected + compounding curve). Dashboard Act 2 is mock-ready today.
 
@@ -104,7 +116,7 @@ Point-in-time snapshot as of **2026-06-20** (Sprint Day 4). Live gap tracker: [d
 
 ## Sprint TODO (team tracker)
 
-> **Last updated:** 2026-06-19 (Sprint Day 3). Detailed day-by-day gaps: [PLAN_ALIGNMENT_GAP_CHECKLIST.md](docs/monica/PLAN_ALIGNMENT_GAP_CHECKLIST.md). Tick items in MRs; Monica updates this block at daily sync.
+> **Last updated:** 2026-06-19 (Sprint Day 3). Detailed day-by-day gaps: [PLAN_ALIGNMENT_GAP_CHECKLIST.md](PLAN_ALIGNMENT_GAP_CHECKLIST.md). Tick items in MRs; Monica updates this block at daily sync.
 
 | Milestone | Date | Days away |
 |-----------|------|-----------|
@@ -123,7 +135,7 @@ Point-in-time snapshot as of **2026-06-20** (Sprint Day 4). Live gap tracker: [d
 - [ ] LLM distillation → structured candidate `{when, lesson, scope, evidence, form}` with provenance `logs/*.jsonl:<line>`
 - [ ] Learning-moment detector (heuristics minimum for demo)
 - [ ] **Promote → `KnowledgeGraph.write`** (approval in dashboard must persist to graph, not candidate store only)
-- [ ] PostgreSQL RDS provisioned + `PRAXIS_DB_URL` live ([RDS_KG_DEPLOY.md](docs/monica/RDS_KG_DEPLOY.md))
+- [ ] PostgreSQL RDS provisioned + `PRAXIS_DB_URL` live ([RDS_KG_DEPLOY.md](RDS_KG_DEPLOY.md))
 - [ ] Acknowledge Monica P0 eval cases in [MATTHEW_HANDOFF.md](knowledge/evals/cases/MATTHEW_HANDOFF.md) (`quirky_exhaustive_switch`, `quirky_config_load_order`)
 
 **Dominic (Arch, Eval & Integration)**
@@ -138,8 +150,8 @@ Point-in-time snapshot as of **2026-06-20** (Sprint Day 4). Live gap tracker: [d
 
 - [x] Human-gate UI mock-complete (React dashboard + Python contract v1 client)
 - [x] P0 eval cases + `test_cases.py` green
-- [ ] Live integration smoke: promote/reject/resolve chain on Matthew API ([INTEGRATION_SMOKE.md](docs/monica/INTEGRATION_SMOKE.md))
-- [ ] Timed **Act 2** rehearsal ≤3.5 min ([DEMO_SCRIPT.md](docs/monica/DEMO_SCRIPT.md))
+- [ ] Live integration smoke: promote/reject/resolve chain on Matthew API ([INTEGRATION_SMOKE.md](INTEGRATION_SMOKE.md))
+- [ ] Timed **Act 2** rehearsal ≤3.5 min ([DEMO_SCRIPT.md](DEMO_SCRIPT.md))
 
 **Team**
 
@@ -165,7 +177,7 @@ Point-in-time snapshot as of **2026-06-20** (Sprint Day 4). Live gap tracker: [d
 - [ ] Tag **`demo-jun29`** — Sun Jun 28 AM
 - [ ] Backup recording captured
 - [ ] Monica: user-flow video ≤3 min (React primary)
-- [ ] Monica: manual a11y pass (tab + screen reader) per [DAYS_9_10_REMAINING.md](docs/monica/DAYS_9_10_REMAINING.md)
+- [ ] Monica: manual a11y pass (tab + screen reader) per [DAYS_9_10_REMAINING.md](DAYS_9_10_REMAINING.md)
 - [ ] Dominic: full 3-act spoken script (Act 1 dumb agent · Act 2 distillation · Act 3 smart agent + scoreboard)
 
 ### P1 (after P0 or stretch)
@@ -180,7 +192,7 @@ Point-in-time snapshot as of **2026-06-20** (Sprint Day 4). Live gap tracker: [d
 ### How to update this list
 
 - Monica ticks items at daily 10am sync; pillar leads confirm in MR before checking `[x]`
-- Link MR/commit in standup notes under `docs/monica/standup-notes/`
+- Link MR/commit in standup notes under `docs/standup-notes/`
 - Do not check integration/E2E items until smoke doc or pytest proves it
 - After Jun 25 feature freeze: bugfixes + measurement only
 
@@ -216,13 +228,13 @@ Point-in-time snapshot as of **2026-06-20** (Sprint Day 4). Live gap tracker: [d
 
 ## Team & pillars
 
-Three Gauntlet AI Fellows, each owning one end-to-end pillar for a 9–10 day focused sprint:
+Three Gauntlet AI Fellows collaborating on a production-grade capstone. Each member leads one distinct, high-impact aspect of the project. Monica Peters serves as Scrum Master for daily 10:00 AM syncs and builds the **Lite version** (this repo) demonstrating the core loop end-to-end.
 
 | Lead | Pillar | Focus |
 |------|--------|-------|
-| **Matthew Daw** | ML & Knowledge Pipeline | Ingestion, learning-moment detection, LLM distillation, consolidation/dedup/scoring, knowledge graph, provenance |
-| **Monica Peters** | Dashboard & Human Gate | React human-gate dashboard, Python contract layer, approval workflow, contradiction resolution UI, credibility metrics |
-| **Dominic Antonelli** | Architecture, Eval & Integration | System design, eval harness, VCS-agnostic replay automation, session capture wrapper, deployment, compounding-curve proof |
+| **Matthew Daw** | ML & Knowledge Pipeline | Ingestion, learning moment detection (ML classifier), LLM distillation, consolidation/dedup/scoring, knowledge graph, provenance.<br><em>Interview claim: "I led the ML-powered distillation engine that turns raw JSONL logs into scored, deduplicated, human-approved knowledge with full provenance."</em> |
+| **Monica Peters** | Dashboard & Human Gate | React human-gate dashboard (`frontend-react/`) plus Python contract layer (`frontend/`), approval workflow (proposed→suggested→active), contradiction resolution UI, credibility metrics viz, injection controls.<br><em>Interview claim: "I led the design and built the human approval dashboard that enforces quality gates and makes knowledge promotion transparent and measurable."</em> |
+| **Dominic Antonelli** | Architecture, Eval & Integration | System design, eval harness (fixed tasks + metrics), GitHub hook/PR automation, Python tooling, deployment, live demo & compounding curve proof.<br><em>Interview claim: "I architected the eval harness and integration layer that rigorously proves PRAXIS delivers ≥50% fewer corrections with compounding gains."</em> |
 
 Daily 15-minute syncs; all code reviewed by at least one other member before merge.
 
@@ -243,7 +255,7 @@ Sprint **Day 1 = Wednesday, June 16, 2026** (Thursday June 18 skipped). See the 
 | Demo & handoff | 9–10 | Live demo script, documentation, presentation practice (internal **Jun 26–27**) |
 | **Gauntlet showcase** | — | **Mon Jun 29** — 10-minute live presentation |
 
-Team freeze gates and three practice runs: [docs/monica/PLAN_ALIGNMENT_GAP_CHECKLIST.md](docs/monica/PLAN_ALIGNMENT_GAP_CHECKLIST.md).
+Team freeze gates and three practice runs: [PLAN_ALIGNMENT_GAP_CHECKLIST.md](PLAN_ALIGNMENT_GAP_CHECKLIST.md).
 
 ---
 
@@ -253,9 +265,11 @@ Team freeze gates and three practice runs: [docs/monica/PLAN_ALIGNMENT_GAP_CHECK
 2. **Distillation** — PRAXIS surfaces scored candidates linked to transcript lines; human promotes `suggested → active`.
 3. **Smart agent** — sibling task nails quirks first try; side-by-side scoreboard plus compounding curve across a pre-run batch.
 
-Demo script: [docs/monica/DEMO_SCRIPT.md](docs/monica/DEMO_SCRIPT.md)
+Demo script: [DEMO_SCRIPT.md](DEMO_SCRIPT.md)
 
 ---
+
+> **Note:** The diagram below reflects the **planned full-system layout**. The current `praxis-lite` checkout contains only a subset of these components (no `infra/`, no `session-capture/`). See the "Lite repo scope" paragraph in the Implementation status section for details.
 
 ## Repository layout
 
@@ -264,8 +278,7 @@ praxis/
 ├── docs/                      # Plans, proposals, integration contracts, fixtures
 │   ├── integration/           # candidate-api-v1, eval-metrics-v1, wire-up, JSON fixtures
 │   ├── monica/                # Dashboard pillar — architecture, wireframes, deploy, demo
-│   ├── matt/future-work/      # Post-MVP knowledge-graph eval design (parked)
-│   └── plans/                 # MVP plan (mvp-plan.html)
+│   └── plans/                 # MVP plan + historical proposal (lite-focused)
 ├── .cursor/rules/             # Team Cursor rules (shared, dashboard, pipeline-eval, git-sync)
 ├── frontend/                  # Python contract + mock data (Monica)
 │   ├── models/                # Candidate types (API contract surface)
@@ -343,7 +356,7 @@ npm run dev
 
 Mock mode loads `public/mock-candidates.json` — no backend required. Set `VITE_PRAXIS_API_BASE_URL` in `.env.local` for Matthew's live server. See [frontend-react/README.md](frontend-react/README.md) and [docs/integration/wire-up.md](docs/integration/wire-up.md).
 
-**Render deploy (portfolio demo):** [docs/monica/RENDER_DEPLOY.md](docs/monica/RENDER_DEPLOY.md)
+**Render deploy (portfolio demo):** [RENDER_DEPLOY.md](RENDER_DEPLOY.md)
 
 ### 3. Run the candidate API (optional live backend)
 
@@ -367,7 +380,7 @@ docker run -p 8080:8080 -e PRAXIS_AUTH_DISABLED=1 praxis-api
 
 Point the React dashboard at it via `VITE_PRAXIS_API_BASE_URL`. Cloud hosting
 (AWS App Runner + CloudFront via CDK, or Render) is described in
-[infra/README.md](infra/README.md) and [docs/monica/RENDER_DEPLOY.md](docs/monica/RENDER_DEPLOY.md).
+[RENDER_DEPLOY.md](RENDER_DEPLOY.md) (Render blueprints; full CDK in parallel repo) and [RENDER_DEPLOY.md](RENDER_DEPLOY.md).
 
 ### 4. Run the eval harness
 
@@ -393,7 +406,7 @@ Registered cases live in `knowledge/evals/cases/`. Results append to `knowledge/
 cd infra
 npm install
 npm run deploy            # all stacks; or `npm run deploy:web` for hosting only
-# Knowledge-graph RDS setup: docs/monica/RDS_KG_DEPLOY.md
+# Knowledge-graph RDS setup: RDS_KG_DEPLOY.md
 
 # Build claude+ wrapper
 cd ..\session-capture\wrapper
@@ -473,7 +486,7 @@ Postgres path; accepted as-is in offline/JSON mode).
 
 Secrets are **environment-only** — never commit tokens or credentials.
 
-RDS + pgvector deploy and Postgres-backed candidate API: [docs/monica/RDS_KG_DEPLOY.md](docs/monica/RDS_KG_DEPLOY.md).
+RDS + pgvector deploy and Postgres-backed candidate API: [RDS_KG_DEPLOY.md](RDS_KG_DEPLOY.md).
 
 ---
 
@@ -497,7 +510,7 @@ uv run pytest knowledge/evals/tests/test_cases.py -q
 uv run pytest frontend/tests/ -q
 ```
 
-**React dashboard** (Vitest + lint + build — rehearsal gate per [DAYS_9_10_REMAINING.md](docs/monica/DAYS_9_10_REMAINING.md)):
+**React dashboard** (Vitest + lint + build — rehearsal gate per [DAYS_9_10_REMAINING.md](DAYS_9_10_REMAINING.md)):
 
 ```powershell
 cd frontend-react
@@ -520,14 +533,14 @@ Contract fixtures are canonical in [docs/integration/fixtures/](docs/integration
 | [docs/integration/candidate-api-v1.md](docs/integration/candidate-api-v1.md) | **Matthew ↔ Monica** candidate REST contract + fixtures |
 | [docs/integration/eval-metrics-v1.md](docs/integration/eval-metrics-v1.md) | **Dominic ↔ Monica** eval metrics JSON contract |
 | [docs/integration/wire-up.md](docs/integration/wire-up.md) | Self-serve dashboard wire-up (no pairing) |
-| [docs/monica/RDS_KG_DEPLOY.md](docs/monica/RDS_KG_DEPLOY.md) | RDS PostgreSQL 16 + pgvector — AWS CLI, Secrets Manager, Postgres candidate store |
-| [infra/README.md](infra/README.md) | AWS CDK stacks overview |
+| [RDS_KG_DEPLOY.md](RDS_KG_DEPLOY.md) | RDS PostgreSQL 16 + pgvector — AWS CLI, Secrets Manager, Postgres candidate store |
+| [RENDER_DEPLOY.md](RENDER_DEPLOY.md) (Render blueprints; full CDK in parallel repo) | AWS CDK stacks overview |
 | [frontend-react/README.md](frontend-react/README.md) | React Knowledge Graph dashboard — Matthew API validation |
-| [docs/monica/ARCHITECTURE_MONICA.md](docs/monica/ARCHITECTURE_MONICA.md) | Dashboard pillar architecture — React UI, API boundaries |
-| [docs/monica/monica-wireframes.md](docs/monica/monica-wireframes.md) | Dashboard as-built spec and UX notes |
-| [docs/monica/DEMO_SCRIPT.md](docs/monica/DEMO_SCRIPT.md) | Three-act live demo script |
-| [docs/monica/PLAN_ALIGNMENT_GAP_CHECKLIST.md](docs/monica/PLAN_ALIGNMENT_GAP_CHECKLIST.md) | Team gap checklist, Scrum Master duties, demo freeze gates |
-| [docs/monica/STANDUP_TEMPLATE.md](docs/monica/STANDUP_TEMPLATE.md) | Daily 15-min standup template |
+| [ARCHITECTURE_MONICA.md](ARCHITECTURE_MONICA.md) | Dashboard pillar architecture — React UI, API boundaries |
+| [monica-wireframes.md](monica-wireframes.md) | Dashboard as-built spec and UX notes |
+| [DEMO_SCRIPT.md](DEMO_SCRIPT.md) | Three-act live demo script |
+| [PLAN_ALIGNMENT_GAP_CHECKLIST.md](PLAN_ALIGNMENT_GAP_CHECKLIST.md) | Team gap checklist, Scrum Master duties, demo freeze gates |
+| [STANDUP_TEMPLATE.md](STANDUP_TEMPLATE.md) | Daily 15-min standup template |
 | [docs/Matthew-Daw-ML-Pipeline-PlanDRAFT.md](docs/Matthew-Daw-ML-Pipeline-PlanDRAFT.md) | ML pipeline pillar plan |
 | [docs/Dominic-Antonelli-Architecture-Eval-PlanDRAFT.md](docs/Dominic-Antonelli-Architecture-Eval-PlanDRAFT.md) | Architecture, eval & integration pillar plan |
 | [session-capture/README.md](session-capture/README.md) | Go wrapper — claude+ CLI, DynamoDB capture |
