@@ -339,7 +339,7 @@ See `.cursor/rules/` for team coding standards.
 - **SAST / Secret Detection**: GitLab CI includes official templates; extend with dependency & container scanning.
 - **Data residency**: Default is in-memory; production path uses Postgres + DynamoDB (infra/).
 
-Report vulnerabilities via private GitLab issue or security@gauntletai.com (placeholder).
+Report vulnerabilities via private GitLab issue or monigarr@monigarr.com.
 
 ---
 
