@@ -287,7 +287,7 @@ Or document that all contributors must run frontend tests from `frontend/` with 
 
 ### P2 — Polish / tech debt
 
-8. Rename `knowledge/injestion/` → `ingestion/` when Matthew agrees (breaking import change).
+8. ~~Rename `knowledge/injestion/` → `ingestion/`~~ **Done (2026-06-21)**.
 9. Add `.gitignore` entries for `frontend/venv/`, `.venv/`, `node_modules/`.
 10. ~~Scaffold or remove empty `frontend-react/` to avoid confusion.~~ **Done (2026-06-18)** — React dashboard shipped; see `frontend-react/README.md`.
 11. Add HTTP-level tests for `ApiDataProvider` with a stub server.

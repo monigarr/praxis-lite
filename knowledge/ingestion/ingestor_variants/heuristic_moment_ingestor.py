@@ -6,7 +6,7 @@ import re
 from typing import Any, Iterable
 from uuid import uuid4
 
-from knowledge.injestion.parent_injestor import Ingestor, Insight
+from knowledge.ingestion.parent_ingestor import Ingestor, Insight
 
 
 class HeuristicLearningMomentIngestor(Ingestor):

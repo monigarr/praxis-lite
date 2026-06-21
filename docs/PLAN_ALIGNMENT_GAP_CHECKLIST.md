@@ -173,7 +173,7 @@ Dominic owns harness pairing (cold vs injected) and metrics; Monica owns **case 
 
 **Files to create/extend:**
 
-- [ ] `knowledge/ingestion/` (rename from `injestion/` when ready)
+- [x] `knowledge/ingestion/` (renamed from `injestion/`)
 - [ ] `knowledge/distillation/` or pipeline module emitting contract v1 `Candidate` shapes
 - [ ] Wire provenance into objects matching [candidate-api-v1.md](../integration/candidate-api-v1.md)
 
@@ -215,8 +215,8 @@ Dominic owns harness pairing (cold vs injected) and metrics; Monica owns **case 
 **Existing foundation:**
 
 ```text
-knowledge/injestion/parent_injestor.py
-knowledge/injestion/injestor_variants/prompt_injestor.py
+knowledge/ingestion/parent_ingestor.py
+knowledge/ingestion/ingestor_variants/prompt_ingestor.py
 knowledge/knowledge_graph/parent_knowledge_graph.py
 knowledge/knowledge_graph/knowledge_graph_variants/in_memory_graph.py
 knowledge/tests/test_injestor.py

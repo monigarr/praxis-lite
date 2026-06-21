@@ -35,14 +35,14 @@ flowchart LR
 
 | Module | Current state | Variant count |
 |--------|---------------|---------------|
-| [`knowledge/injestion/injestor_variants/`](../../knowledge/injestion/injestor_variants/) | [`PromptIngestor`](../../knowledge/injestion/injestor_variants/prompt_injestor.py) — passthrough or one LLM call, line-split | **1** |
+| [`knowledge/ingestion/ingestor_variants/`](../../knowledge/ingestion/ingestor_variants/) | [`PromptIngestor`](../../knowledge/ingestion/ingestor_variants/prompt_ingestor.py) — passthrough or one LLM call, line-split | **1** |
 | [`knowledge/graph_reader/grapher_reader_variants/`](../../knowledge/graph_reader/grapher_reader_variants/) | [`WholeFileReader`](../../knowledge/graph_reader/grapher_reader_variants/whole_file_reader.py) — dumps entire graph; `as_claude_tool` defined but not used in runners | **1** |
 | [`knowledge/wiring.py`](../../knowledge/wiring.py) | Always `PromptIngestor` + `WholeFileReader` regardless of `substrate` | — |
 
 **Already built adjacent to ingestor/reader (not in those packages):**
 
 - Vector write policy: Redactor → Deduper → ConflictFlagger in [`knowledge/knowledge_graph/write_policy/`](../../knowledge/knowledge_graph/write_policy/)
-- [`Insight`](../../knowledge/injestion/injestion_def.py) metadata fields (`source`, `confidence`, `scope`, …) — **defined but not flowed**: `Ingestor.ingest()` only calls `graph.write(insight.raw_text)` ([`parent_injestor.py`](../../knowledge/injestion/parent_injestor.py) line 33)
+- [`Insight`](../../knowledge/injestion/injestion_def.py) metadata fields (`source`, `confidence`, `scope`, …) — **defined but not flowed**: `Ingestor.ingest()` only calls `graph.write(insight.raw_text)` ([`parent_ingestor.py`](../../knowledge/ingestion/parent_ingestor.py) line 33)
 - [`pipeline_adapter`](../../knowledge/serve/pipeline_adapter.py) — offline mock insights → dashboard candidates (not live ingest)
 
 ---

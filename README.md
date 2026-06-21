@@ -92,7 +92,7 @@ praxis-lite/
 ├── knowledge/                 # Core KG, ingestion, graph readers, wiring
 │   ├── serve/                 # FastAPI candidate API (auth, store, pipeline adapter)
 │   ├── knowledge_graph/       # ABC + InMemory + vector impl + write policies
-│   ├── injestion/             # Ingestor ABC + variants (note: spelling preserved)
+│   ├── ingestion/             # Ingestor ABC + variants
 │   ├── graph_reader/          # WholeFileReader, retrieving variants
 │   ├── evals/                 # YAML cases, FakeRunner, ClaudeCodeRunner, deterministic checks
 │   └── run.py                 # Dev entrypoint (build_trio + eval smoke)
