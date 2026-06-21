@@ -1,0 +1,166 @@
+[
+  {
+    "id": "cand_1",
+    "title": "TypeScript Exhaustive Switch Pattern",
+    "content": "When using a switch statement on a discriminated union or enum, include a default case that assigns the value to a variable of type `never`.",
+    "state": "proposed",
+    "confidence": 0.85,
+    "provenance": "logs/session_20260615.jsonl:88",
+    "createdAt": "2026-06-15T14:30:00Z",
+    "confidenceBreakdown": {
+      "frequency": 0.82,
+      "recency": 0.88,
+      "breadth": 0.76
+    }
+  },
+  {
+    "id": "cand_2",
+    "title": "React useEffect Cleanup",
+    "content": "Always return a cleanup function from useEffect when subscribing to external events or setting up intervals.",
+    "state": "suggested",
+    "confidence": 0.92,
+    "provenance": "logs/session_20260614.jsonl:214",
+    "createdAt": "2026-06-14T09:15:00Z"
+  },
+  {
+    "id": "cand_9",
+    "title": "Prefer explicit error types in Rust",
+    "content": "Use custom error enums instead of Box<dyn Error> in library code for clearer propagation.",
+    "state": "suggested",
+    "confidence": 0.71,
+    "provenance": "logs/session_20260612.jsonl:301",
+    "createdAt": "2026-06-12T08:00:00Z",
+    "contradictions": [
+      "cand_16"
+    ]
+  },
+  {
+    "id": "cand_16",
+    "title": "Use anyhow::Error for application errors",
+    "content": "For application binaries, anyhow::Error + thiserror is the pragmatic choice; reserve custom enums for library crates.",
+    "state": "suggested",
+    "confidence": 0.68,
+    "provenance": "logs/session_20260612.jsonl:312",
+    "createdAt": "2026-06-12T08:05:00Z",
+    "contradictions": [
+      "cand_9"
+    ]
+  },
+  {
+    "id": "cand_12",
+    "title": "Python pathlib preference",
+    "content": "Prefer pathlib.Path over os.path for all new filesystem code.",
+    "state": "active",
+    "confidence": 0.95,
+    "provenance": "logs/session_20260610.jsonl:45",
+    "createdAt": "2026-06-10T10:00:00Z"
+  },
+  {
+    "id": "cand_18",
+    "title": "Docstring policy for public APIs",
+    "content": "All public functions must have Google-style docstrings with Args, Returns, Raises.",
+    "state": "decayed",
+    "confidence": 0.4,
+    "provenance": "logs/session_20260609.jsonl:77",
+    "createdAt": "2026-06-09T16:20:00Z"
+  },
+  {
+    "id": "cand_3",
+    "title": "Lesson 3",
+    "content": "Auto-generated lesson content 3.",
+    "state": "suggested",
+    "confidence": 0.75,
+    "provenance": "logs/session_20260613.jsonl:30",
+    "createdAt": "2026-06-13T12:00:00Z"
+  },
+  {
+    "id": "cand_4",
+    "title": "Lesson 4",
+    "content": "Auto-generated lesson content 4.",
+    "state": "proposed",
+    "confidence": 0.8,
+    "provenance": "logs/session_20260614.jsonl:40",
+    "createdAt": "2026-06-14T12:00:00Z"
+  },
+  {
+    "id": "cand_5",
+    "title": "Lesson 5",
+    "content": "Auto-generated lesson content 5.",
+    "state": "suggested",
+    "confidence": 0.6,
+    "provenance": "logs/session_20260615.jsonl:50",
+    "createdAt": "2026-06-15T12:00:00Z"
+  },
+  {
+    "id": "cand_6",
+    "title": "Lesson 6",
+    "content": "Auto-generated lesson content 6.",
+    "state": "proposed",
+    "confidence": 0.65,
+    "provenance": "logs/session_20260616.jsonl:60",
+    "createdAt": "2026-06-16T12:00:00Z"
+  },
+  {
+    "id": "cand_7",
+    "title": "Lesson 7",
+    "content": "Auto-generated lesson content 7.",
+    "state": "suggested",
+    "confidence": 0.7,
+    "provenance": "logs/session_20260617.jsonl:70",
+    "createdAt": "2026-06-17T12:00:00Z"
+  },
+  {
+    "id": "cand_8",
+    "title": "Lesson 8",
+    "content": "Auto-generated lesson content 8.",
+    "state": "proposed",
+    "confidence": 0.75,
+    "provenance": "logs/session_20260618.jsonl:80",
+    "createdAt": "2026-06-18T12:00:00Z"
+  },
+  {
+    "id": "cand_10",
+    "title": "Lesson 10",
+    "content": "Auto-generated lesson content 10.",
+    "state": "active",
+    "confidence": 0.8,
+    "provenance": "logs/session_202606110.jsonl:70",
+    "createdAt": "2026-06-110T09:00:00Z"
+  },
+  {
+    "id": "cand_11",
+    "title": "Lesson 11",
+    "content": "Auto-generated lesson content 11.",
+    "state": "active",
+    "confidence": 0.8,
+    "provenance": "logs/session_202606111.jsonl:77",
+    "createdAt": "2026-06-111T09:00:00Z"
+  },
+  {
+    "id": "cand_12",
+    "title": "Lesson 12",
+    "content": "Auto-generated lesson content 12.",
+    "state": "active",
+    "confidence": 0.8,
+    "provenance": "logs/session_202606112.jsonl:84",
+    "createdAt": "2026-06-112T09:00:00Z"
+  },
+  {
+    "id": "cand_13",
+    "title": "Lesson 13",
+    "content": "Auto-generated lesson content 13.",
+    "state": "active",
+    "confidence": 0.8,
+    "provenance": "logs/session_202606113.jsonl:91",
+    "createdAt": "2026-06-113T09:00:00Z"
+  },
+  {
+    "id": "cand_14",
+    "title": "Lesson 14",
+    "content": "Auto-generated lesson content 14.",
+    "state": "active",
+    "confidence": 0.8,
+    "provenance": "logs/session_202606114.jsonl:98",
+    "createdAt": "2026-06-114T09:00:00Z"
+  }
+]
