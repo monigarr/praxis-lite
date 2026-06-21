@@ -33,10 +33,16 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Base resets */
+/* Base resets & full-bleed dark dashboard */
+html, body, #app {
+  background: var(--background) !important;
+  color: var(--foreground);
+  min-height: 100vh;
+  width: 100%;
+}
+
 body {
   margin: 0;
-  min-height: 100vh;
 }
 
 h1, h2, h3 {
@@ -54,7 +60,7 @@ button {
 .dashboard {
   min-height: 100vh;
   width: 100%;
-  background: var(--background);
+  background: var(--background) !important;
 }
 
 /* Top header bar */
@@ -405,4 +411,257 @@ button:focus-visible,
 /* Subtle depth */
 .table-container {
   background: linear-gradient(180deg, #11131b 0%, #0f1119 100%);
+}
+
+/* Polished top navigation icons */
+.app-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 0.25rem;
+  margin: 0 1rem;
+}
+
+.app-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+}
+
+.app-nav-item:hover {
+  color: var(--foreground);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.app-nav-item.active {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+}
+
+.app-nav-item svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.app-nav-item:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .app-nav {
+    display: none;
+  }
+}
+
+/* Header layout utilities */
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.header-title {
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.header-refresh {
+  padding: 0.5rem 1rem;
+}
+
+/* Candidate count */
+.candidate-count {
+  margin-left: auto;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+}
+
+/* Main content grid */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 1.5rem;
+  padding: 0 2rem 3rem;
+  align-items: start;
+}
+
+/* Table column widths */
+.col-title { width: 38%; }
+.col-state { width: 14%; }
+.col-confidence { width: 12%; }
+.col-provenance { width: 18%; }
+.col-actions { width: 18%; text-align: right; }
+
+/* Selected row highlight */
+.row-selected {
+  background: rgba(99, 102, 241, 0.08);
+}
+
+/* Cell utilities */
+.provenance-cell {
+  color: var(--muted-foreground);
+  font-size: 0.8125rem;
+}
+
+.actions-cell {
+  text-align: right;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.action-btn-sm {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.75rem;
+}
+
+.action-btn-resolve {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+}
+
+/* Detail panel content */
+.content-paragraph {
+  white-space: pre-wrap;
+  color: var(--card-foreground);
+  line-height: 1.65;
+  margin-bottom: 1.25rem;
+}
+
+.breakdown-container {
+  margin-top: 1.25rem;
+  font-size: 0.875rem;
+}
+
+.breakdown-header {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--muted-foreground);
+}
+
+.breakdown-list {
+  padding-left: 1.1rem;
+  margin: 0;
+  color: var(--muted-foreground);
+}
+
+.breakdown-item {
+  margin-bottom: 0.1rem;
+}
+
+/* Contradiction box */
+.contradiction-box {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  background: rgba(251, 191, 36, 0.08);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.contradiction-title {
+  font-weight: 600;
+  margin-bottom: 0.375rem;
+}
+
+.contradiction-text {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+.resolve-btn {
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+  padding: 0.5rem 1rem;
+}
+
+/* Detail action row */
+.detail-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Status messages */
+.status-active {
+  margin-top: 1rem;
+  font-size: 0.8125rem;
+  color: #34d399;
+}
+
+.status-decayed {
+  margin-top: 1rem;
+  font-size: 0.8125rem;
+  color: #fbbf24;
+}
+
+/* Empty detail state */
+.empty-detail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  color: var(--muted-foreground);
+  text-align: center;
+}
+
+/* Footer */
+.app-footer {
+  padding: 2rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+}
+
+/* New section containers for multi-view navigation */
+.section-container {
+  padding: 0 2rem 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  margin-bottom: 1.75rem;
+}
+
+.section-header h2 {
+  font-size: 1.75rem;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.025em;
+}
+
+.section-subtitle {
+  color: var(--muted-foreground);
+  font-size: 0.9375rem;
+  margin: 0;
 }
