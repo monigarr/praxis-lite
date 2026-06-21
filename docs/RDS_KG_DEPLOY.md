@@ -1,12 +1,10 @@
 # RDS PostgreSQL 16 + pgvector — Knowledge Graph Store
 
-**Lite version context:** This repo is the **praxis-lite** implementation Monica builds in parallel with the full system. Monica serves as Daily Scrum Master (10:00 AM syncs). See [docs/plans/PRAXIS_Project_Plan.html](../plans/PRAXIS_Project_Plan.html) for the locked architecture, Lite framing, and **🎯 Capstone Alignment (PRD)** box.
+**Lite version context:** This repo (`praxis-lite`) is a solo implementation and maintenance effort by Monica Peters. It is inspired by the original PRAXIS multi-pillar architecture but is developed independently. See [docs/plans/PRAXIS_Project_Plan.html](../plans/PRAXIS_Project_Plan.html) for the locked architecture, Lite framing, and **🎯 Capstone Alignment (PRD)** box.
 
 Stand up the PRAXIS knowledge-graph store of record on **AWS RDS PostgreSQL 16** with the **pgvector** extension, bootstrap the canonical schema, and let the candidate API swap from the JSON-file `CandidateStore` to `PostgresCandidateStore` automatically when a database DSN resolves.
 
-**Owner:** Matthew Daw (backend / `knowledge/serve`) · **Dashboard impact:** Monica's UIs stay API-only — no Postgres env vars in `frontend/` or `frontend-react/`.
-
-After the knowledge-graph CDK stack merge, **AWS CLI must be installed and credentials saved** so the API (or bootstrap script) can pull DB credentials from **AWS Secrets Manager**. Ask Matthew or post in standup if Secrets Manager access is blocked.
+**Note:** This document contains historical references to the original team project. Current `praxis-lite` development and deployment decisions are made solely by Monica Peters.
 
 ---
 

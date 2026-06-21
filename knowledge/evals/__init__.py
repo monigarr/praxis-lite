@@ -1,1 +1,1 @@
-"""Eval harness (Dominic) + Matthew handoff cases."""
+"""Eval harness (praxis-lite implementation)."""

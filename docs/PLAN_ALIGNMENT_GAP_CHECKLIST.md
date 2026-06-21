@@ -1,13 +1,13 @@
 # PRAXIS Plan Alignment Gap Checklist — Monica (Scrum Master + Dashboard)
 
-**Lite version context:** This repo is the **praxis-lite** implementation Monica builds in parallel with the full system. See [docs/plans/PRAXIS_Project_Plan.html](../plans/PRAXIS_Project_Plan.html) for the locked architecture, Lite framing, and **🎯 Capstone Alignment (PRD)** box.
+**Lite version context:** This repo (`praxis-lite`) is a solo implementation and maintenance effort by Monica Peters. It is inspired by the original PRAXIS multi-pillar architecture but is developed independently. See [docs/plans/PRAXIS_Project_Plan.html](../plans/PRAXIS_Project_Plan.html) for the locked architecture, Lite framing, and **🎯 Capstone Alignment (PRD)** box.
 
-**Owner:** Monica Peters — Dashboard & Human Gate Lead · **Daily Scrum Master**  
-**Generated:** 2026-06-18 · **Updated at:** each daily sync  
-**Source of truth:** [PRAXIS_Project_Plan.html](../plans/PRAXIS_Project_Plan.html) (architecture diagram + 9-day schedule), [proposal-praxis.md](../plans/proposal-praxis.md), [AUDIT.md](../../AUDIT.md)  
+**Maintained by:** Monica Peters  
+**Generated:** 2026-06-18 · **Updated:** as needed  
+**Source of truth:** [PRAXIS_Project_Plan.html](../plans/PRAXIS_Project_Plan.html) (architecture diagram + schedule), [proposal-praxis.md](../plans/proposal-praxis.md), [AUDIT.md](../../AUDIT.md)  
 **Live demo:** **Monday, June 29, 2026** — 10-minute Gauntlet capstone presentation  
-**Demo calendar:** **Internal** freeze/practice **Thu–Fri Jun 26–27** (Sprint Days 9–10) · **Public** Gauntlet showcase **Mon Jun 29** — see [Scrum Master freeze gates](#demo-freeze--three-practice-runs-before-jun-29) below  
-**Sprint snapshot:** Monica pillar mock-complete through Day 8 (React UI + Python contract layer); P0 eval cases `quirky_*` + poison good/bad landed with tests; Matthew live API + **PostgreSQL** still critical path for Acts 2–3 on staging
+**Demo calendar:** **Internal** freeze/practice **Thu–Fri Jun 26–27** (Sprint Days 9–10) · **Public** Gauntlet showcase **Mon Jun 29**  
+**Note:** This document contains historical references to the original team project. Current `praxis-lite` work is performed solely by Monica Peters.
 
 ---
 

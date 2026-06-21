@@ -1,7 +1,7 @@
 [project]
 name = "praxis-knowledge"
 version = "0.1.0"
-description = "PRAXIS ML & Knowledge Pipeline (Matthew Daw pillar)"
+description = "PRAXIS ML & Knowledge Pipeline"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.115.0",

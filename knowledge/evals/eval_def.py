@@ -20,7 +20,7 @@ class Rubric:
 class SeededInsight:
     """Knowledge to inject for an eval case.
 
-    via_ingestor: exercises full Matthew pipeline (ingest → graph write)
+    via_ingestor: exercises full knowledge pipeline (ingest → graph write)
     direct_to_graph: bypasses ingestor, seeds graph directly (injection-only tests)
     """
 

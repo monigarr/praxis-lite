@@ -1,4 +1,4 @@
-"""FastAPI candidate API v1 (Matthew ↔ Monica contract)."""
+"""FastAPI candidate API v1 (praxis-lite implementation)."""
 
 from .app import app
 

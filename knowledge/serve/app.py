@@ -99,7 +99,7 @@ def ingest_jsonl(payload: dict[str, Any], current_user=Depends(get_current_user)
     return {"status": "accepted", "count": 0}
 
 
-# ---------------- Eval metrics endpoint (Dominic) ----------------
+# ---------------- Eval metrics endpoint (placeholder) ----------------
 from pathlib import Path
 import json
 

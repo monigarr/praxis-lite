@@ -1,4 +1,4 @@
-"""PRAXIS Knowledge Pipeline (Matthew Daw).
+"""PRAXIS Knowledge Pipeline (praxis-lite).
 
 Knowledge substrate, ingestion, distillation, graph, candidate API, and eval harness.
 """

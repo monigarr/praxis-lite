@@ -1,12 +1,12 @@
 # Monica Peters — Dashboard As-Built Spec
 
-**Lite version context:** This repo is the **praxis-lite** implementation Monica builds in parallel with the full system. Monica serves as Daily Scrum Master (10:00 AM syncs). See [docs/plans/PRAXIS_Project_Plan.html](../plans/PRAXIS_Project_Plan.html) for the locked architecture, Lite framing, and **🎯 Capstone Alignment (PRD)** box.
+**Lite version context:** This repo (`praxis-lite`) is a solo implementation and maintenance effort by Monica Peters. It is inspired by the original PRAXIS multi-pillar architecture but is developed independently. See [docs/plans/PRAXIS_Project_Plan.html](../plans/PRAXIS_Project_Plan.html) for the locked architecture, Lite framing, and **🎯 Capstone Alignment (PRD)** box.
 
 **Author:** Monica Peters <monigarr@MoniGarr.com>  
 **Branch:** `monica/dashboard-human-gate`  
 **Created:** 2026-06-17  
 **Last updated:** 2026-06-19  
-**Status:** As-built through Day 8 on mock — React UI shipped; Python contract layer in `frontend/`; live E2E when Matthew publishes API endpoints.
+**Status:** As-built through Day 8 on mock — React UI shipped; Python contract layer in `frontend/`; live E2E when the candidate API is implemented in `knowledge/serve/`.
 
 Architecture source of truth: [PRAXIS_Project_Plan.html](../plans/PRAXIS_Project_Plan.html).
 

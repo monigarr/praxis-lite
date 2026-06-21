@@ -1,11 +1,10 @@
-# Daily Team StandUp Report — Monica Peters (Scrum Master)
+# Daily StandUp Notes — Monica Peters
 
-**Lite version context:** This repo is the **praxis-lite** implementation Monica builds in parallel with the full system. See [docs/plans/PRAXIS_Project_Plan.html](../plans/PRAXIS_Project_Plan.html) for the locked architecture, Lite framing, and **🎯 Capstone Alignment (PRD)** box.
+**Lite version context:** This repo (`praxis-lite`) is a solo implementation and maintenance effort by Monica Peters. It is inspired by the original PRAXIS multi-pillar architecture but is developed independently. See [docs/plans/PRAXIS_Project_Plan.html](../plans/PRAXIS_Project_Plan.html) for the locked architecture, Lite framing, and **🎯 Capstone Alignment (PRD)** box.
 
-**Sync with:** Tom Tarpey · **Time:** 10:00 AM daily · **Duration:** 15 minutes  
-**Checklist owner:** Monica — tick items in [PLAN_ALIGNMENT_GAP_CHECKLIST.md](PLAN_ALIGNMENT_GAP_CHECKLIST.md) after each sync
+**Time:** As needed · **Duration:** 5–10 minutes for personal notes
 
-Copy this template into your daily notes or Slack post.
+Copy this template into your daily notes.
 
 ---
 
@@ -23,22 +22,22 @@ Copy this template into your daily notes or Slack post.
 
 - 
 
-### Team blockers (needs help from Matthew / Dominic / Tom)
+### Blockers / Open Items
 
-| Blocker | Owner | Needed by |
-|---------|-------|-----------|
+| Item | Status | Notes |
+|------|--------|-------|
 | | | |
 
-### Monica pillar status (one line)
+### Current focus (one line)
 
-Dashboard human-gate: _mock / API-integrated / demo-ready_ — see [monica-wireframes.md](monica-wireframes.md) §Remaining.
+Dashboard human-gate / Knowledge pipeline / Evals: _mock / API-integrated / demo-ready_ — see relevant docs.
 
 ---
 
 ## Quick links
 
-- [PLAN_ALIGNMENT_GAP_CHECKLIST.md](PLAN_ALIGNMENT_GAP_CHECKLIST.md) — team gap checklist, freeze gates, eval backlog
+- [PLAN_ALIGNMENT_GAP_CHECKLIST.md](PLAN_ALIGNMENT_GAP_CHECKLIST.md) — historical gap checklist (original team context)
 - [Monica-Peters-Dashboard-Plan.md](Monica-Peters-Dashboard-Plan.md)
-- [ARCHITECTURE_MONICA.md](ARCHITECTURE_MONICA.md) §19 sprint table
+- [ARCHITECTURE_MONICA.md](ARCHITECTURE_MONICA.md)
 - [PRAXIS_Project_Plan.html](../plans/PRAXIS_Project_Plan.html) — architecture diagram
 - Branch: `monica/dashboard-human-gate`

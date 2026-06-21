@@ -207,7 +207,7 @@ export default function App() {
       </div>
 
       <footer style={{ marginTop: 48, fontSize: 12, color: "#9ca3af" }}>
-        Monica Peters — Dashboard &amp; Human Gate pillar • Contract v1 • {isLive ? "Connected to live API" : "Offline mock mode"}
+        praxis-lite • Dashboard &amp; Human Gate • Contract v1 • {isLive ? "Connected to live API" : "Offline mock mode"}
       </footer>
     </div>
   );

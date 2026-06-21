@@ -1,4 +1,4 @@
-"""Monica Peters — Dashboard contract models (Python reference layer)."""
+"""Dashboard contract models (Python reference layer) — praxis-lite."""
 
 from .candidate import Candidate, PromotionState
 

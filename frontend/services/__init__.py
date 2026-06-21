@@ -1,1 +1,1 @@
-"""Monica Peters — Dashboard contract services (providers, clients)."""
+"""Dashboard contract services (providers, clients) — praxis-lite."""

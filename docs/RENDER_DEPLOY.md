@@ -1,8 +1,8 @@
 # Render.com Deployment — Monica's Dashboard Pillar
 
-**Lite version context:** This repo is the **praxis-lite** implementation Monica builds in parallel with the full system. Monica serves as Daily Scrum Master (10:00 AM syncs). See [docs/plans/PRAXIS_Project_Plan.html](../plans/PRAXIS_Project_Plan.html) for the locked architecture, Lite framing, and **🎯 Capstone Alignment (PRD)** box.
+**Lite version context:** This repo (`praxis-lite`) is a solo implementation and maintenance effort by Monica Peters. It is inspired by the original PRAXIS multi-pillar architecture but is developed independently. See [docs/plans/PRAXIS_Project_Plan.html](../plans/PRAXIS_Project_Plan.html) for the locked architecture, Lite framing, and **🎯 Capstone Alignment (PRD)** box.
 
-Monica-owned deploy; teammates can ignore and run locally.
+This deployment guide is maintained for the solo `praxis-lite` project.
 
 The human-gate dashboard deploys as a **React static site** (`frontend-react/`). Blueprint at [`frontend-react/render.yaml`](../../frontend-react/render.yaml).
 

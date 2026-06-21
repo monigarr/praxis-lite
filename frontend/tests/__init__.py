@@ -1,1 +1,1 @@
-"""Contract tests for Monica's dashboard layer."""
+"""Contract tests for the dashboard layer (praxis-lite)."""
