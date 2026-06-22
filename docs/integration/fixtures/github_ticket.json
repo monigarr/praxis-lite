@@ -1,0 +1,6 @@
+{
+  "id": "TICKET-QUIRKY-EXHAUSTIVE",
+  "title": "Handle exhaustive union in TypeScript",
+  "description": "Agent must learn: use never check in default so new variants cause compile-time failure",
+  "labels": ["quirky", "eval", "typescript"]
+}

@@ -1,0 +1,11 @@
+id: quirky_pr_exhaustive_switch
+description: "Agent must handle TypeScript discriminated union exhaustively (PR-sourced quirk)."
+seed_prompt: "Implement a TypeScript function handleEvent(e) that covers all union variants without a default case. See PR diff for context."
+seeded_insight:
+  path: direct_to_graph
+  content: "Use a never check in default so new variants cause compile-time failure. (from github_pr_event.json)"
+deterministic_checks:
+  - builds
+expected_outcome: pass
+source: github
+fixture: docs/integration/fixtures/github_pr_event.json

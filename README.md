@@ -54,6 +54,27 @@ This repository (`praxis-lite`) is the canonical, production-scaffolded slice us
 
 ---
 
+## Quick Start by Role
+
+**Engineers & Developers** (3 steps):
+1. Clone & setup: see [Local Development Setup](#local-development-setup)
+2. Run backend + dashboard: [Running the Application](#running-the-application)
+3. Explore contracts & contribute: [API Contracts & Integration](#api-contracts--integration), [Contributing](#contributing)
+
+**Architects & MLOps** (4 steps):
+1. Review three-pillar model in [Architecture](#architecture)
+2. Study write policies & KG: `knowledge/knowledge_graph/write_policy/`
+3. Extend via integration contracts in `docs/integration/`
+4. Run evals: [Knowledge Pipeline & Evals](#knowledge-pipeline--evals)
+
+**Designers & UX** (2 steps):
+1. Launch React dashboard: `cd frontend-react && npm run dev`
+2. Review human-gate flows, state machine, and accessibility notes in [Usage Guide](#usage-guide) and [Security & Compliance](#security--compliance)
+
+**All Roles**: Start with the [Human Gate Dashboard](#human-gate-dashboard) — no CLI required for stakeholders.
+
+---
+
 ## Intended Use Cases
 
 - **Agent teams** running Claude Code on real codebases who want session memory that survives context windows.
@@ -67,13 +88,23 @@ This repository (`praxis-lite`) is the canonical, production-scaffolded slice us
 
 ## Architecture
 
-PRAXIS follows a strict three-pillar model with clear ownership and contract boundaries:
+PRAXIS follows a strict three-pillar model with clear ownership and contract boundaries.
+
+```mermaid
+flowchart TD
+    A[Human Gate Dashboard\nfrontend-react + contracts] -->|REST v1 contracts| B[Knowledge Pipeline\nFastAPI + InMemoryGraph + write policies]
+    B -->|Provenance + redaction| C[Capture & Eval\nsession-capture + evals harness]
+    C -->|JSONL / DynamoDB| A
+    style A fill:#e6f3ff
+    style B fill:#e6ffe6
+    style C fill:#fff5e6
+```
 
 | Pillar | Location | Maturity | Key Components |
 |--------|----------|----------|----------------|
 | **Dashboard & Human Gate** | `frontend-react/`, `frontend/` | High (demo-ready on mock) | React 19 + Vite dashboard, Python contract layer, mock/live API client, state machine (`proposed → suggested → active → decayed`) |
 | **ML & Knowledge Pipeline** | `knowledge/` | Scaffolding (core graph + ingest live) | InMemoryGraph + vector, Ingestors (prompt/JSONL/heuristic), write policies (cluster/dedupe/conflict/score/decay), FastAPI candidate service |
-| **Architecture, Eval & Integration** | `knowledge/evals/`, `session-capture/`, `infra/` | Partial | YAML-driven eval harness + deterministic checks, Go `claude+` PTY capture to DynamoDB, AWS CDK infra |
+| **Architecture, Eval & Integration** | `knowledge/evals/`, `session-capture/`, `infra/` | Partial (Lite: Python equiv delivered) | YAML-driven eval harness + deterministic checks + Python capture.py (subprocess/JSONL + optional DynamoDB) + real ClaudeCodeRunner with --real flag; Go/DynamoDB/CDK remain future |
 
 **Integration contracts** (v1) are the source of truth:
 - `docs/integration/candidate-api-v1.md`
@@ -207,7 +238,7 @@ uv run pytest frontend/tests/
 uv run pytest knowledge/evals/tests/
 ```
 
-**Current status (as of 2026-06-21):** 30+ Python tests passing under the configured `pythonpath = ["."]`.
+**Current status (as of 2026-06-21):** 30+ Python tests + 10+ React (Vitest) tests passing.
 
 **Note:** Some legacy runs required `PYTHONPATH=frontend`; the `pyproject.toml` now handles this.
 
@@ -218,7 +249,7 @@ cd frontend-react
 npm run build          # runs tsc + vite build (type + build check)
 ```
 
-No unit tests yet in React (add Vitest + React Testing Library when expanding).
+React unit tests added (Vitest + RTL): `npm test` / `npm run test:run` (covers App flows, apiClient contract, filters, promote/reject/resolve).
 
 ### Full Quality Gate (manual)
 
@@ -308,6 +339,7 @@ Copy `.env.example` and never commit `.env`.
 - **Graph ops**: `InMemoryGraph` + vector index; write policies run on every mutation.
 - **Evals**: Define cases in YAML under `knowledge/evals/cases/`. Run with `FakeRunner` (offline) or `ClaudeCodeRunner` (credit-consuming).
 - **Deterministic checks**: `builds.py`, `poetry.py` ensure repo health before promotion.
+- **GitHub integration**: `github_hook.py` + `/ingest/github` route for PR/ticket payloads; new case `quirky_pr_exhaustive_switch`.
 
 **For architects / MLOps**: Extend `knowledge_graph/write_policy/` or add new deterministic checks.
 
@@ -339,6 +371,18 @@ See `.cursor/rules/` for team coding standards.
 - **Data residency**: Default is in-memory; production path uses Postgres + DynamoDB (infra/).
 
 Report vulnerabilities via private GitLab issue or monigarr@monigarr.com.
+
+### Enterprise Readiness Checklist
+
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| **Security** | ✅ | JWT auth, redactor.py (PII/secrets), SAST in .gitlab-ci.yml, provenance required |
+| **Privacy & Data Governance** | ✅ | Redaction before writes, optional Postgres/DynamoDB residency, no third-party transcript logging |
+| **Usability** | ✅ | React dashboard for non-technical stakeholders; mock mode for quick demos |
+| **Reusability** | ✅ | Three-pillar contract isolation, no-cross-import, write policies extensible, MIT license |
+| **Accessibility (a11y)** | ⚠️ | React 19 baseline; screen-reader & keyboard pass planned (see DAYS_9_10_REMAINING.md) |
+| **Legal / IP** | ✅ | MIT License, clear copyright, conventional commits + small MRs enforced |
+| **CI / Quality** | ✅ | GitLab CI (SAST + secret detection), ruff/mypy/tsc gates, 30+ tests |
 
 ---
 
@@ -373,7 +417,20 @@ For collaborators or non-technical stakeholders: Start with the dashboard (`fron
 
 ## License
 
-MIT License — see [LICENSE](LICENSE).
+**MIT License** (see full text in [LICENSE](LICENSE))
+
+Copyright (c) 2026 MoniGarr / Monica Peters
+
+**You are free to**:
+- Use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software
+- Permit others to do the same, for any purpose (commercial or private)
+- Integrate into your enterprise systems under the standard MIT terms
+
+**Requirements**:
+- Include the original copyright notice and this permission notice in all copies or substantial portions
+- The Software is provided "AS IS" without warranty of any kind
+
+This license enables maximum reusability and adoption by engineers, architects, and organizations while protecting contributors.
 
 ---
 
@@ -382,11 +439,11 @@ MIT License — see [LICENSE](LICENSE).
 See `docs/plans/PRAXIS_Project_Plan.html` §Capstone Alignment and `PLAN_ALIGNMENT_GAP_CHECKLIST.md` for current sprint gates.
 
 **Near-term (post-demo)**:
-- Full candidate REST API with Postgres persistence
-- Eval metrics HTTP endpoint for dashboard embed
-- React unit tests + CI gate
-- Production Dockerfile + health/readiness probes
-- Compounding-curve measurement harness
+- Full candidate REST API with Postgres persistence (done)
+- Eval metrics HTTP endpoint for dashboard embed (done)
+- React unit tests + CI gate (done — 10+ Vitest tests + GitLab job)
+- Production Dockerfile + health/readiness probes (partially done)
+- Compounding-curve measurement harness (next)
 
 **Longer-term**:
 - Multi-tenant org isolation

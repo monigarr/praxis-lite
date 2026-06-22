@@ -1,81 +1,106 @@
-)
-## Project: LLM-Shield
-### Classification: Open-Source Enterprise Security Architecture
-### Author: Senior AI Architect / Scrum Master (GS-15 Portfolio Artifact)
+# Architectural Blueprint
+
+## Project: PRAXIS Lite
+### Classification: Open-Source Capstone Reference Implementation
+### Author: Gauntlet AI Capstone Team (Monica Peters, Matthew Daw, Dominic Antonelli)
+### Sprint: June 2026
 
 ---
 
-## 1. Architectural Philosophy: AI-Native & AI-First
-LLM-Shield bypasses legacy web patterns by deploying an **AI-Native Software Architecture**. Rather than acting as a standard wrapper with bolt-on analytics, the codebase is structurally organized around the **Model Context Protocol (MCP)** and unified data validation schemas. The architecture is explicitly designed to be read, maintained, and safely extended by developer tooling like
+## 1. Architectural Philosophy: Contract-Driven, Human-Gated, Self-Improving KG
 
+PRAXIS Lite implements a **three-pillar, contract-first architecture** for a self-improving knowledge graph (KG) tailored to Claude Code agents. Rather than a monolithic application, the system is deliberately decoupled into independent pillars that communicate exclusively through versioned integration contracts (`docs/integration/*-v1.md`) or explicit mock fixtures.
 
+Key principles:
+- **No-Cross-Import Rule:** `frontend/` and `frontend-react/` never import from `knowledge/` (enforced and verified in contract tests).
+- **Human Gate as First-Class Citizen:** Every candidate promotion, contradiction, or decay decision requires explicit human action via the React dashboard; full provenance and audit trail.
+- **MCP & Agent-Native Tooling:** The architecture is designed to be readable, maintainable, and safely extended by AI developer tools (Cursor, Claude Code, automated agents) using the Model Context Protocol (MCP) patterns for structured context and tool calling.
+- **Ephemeral & Portable:** Stateless where possible; Docker-first local run; Render.com zero-config deploy; optional AWS CDK for persistence layer.
 
+---
 
-## ARCHITECTURE.md
+## 2. Three-Pillar Architecture
 
-# Architectural Blueprint
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        Human Gate Layer                         │
+│  frontend-react/ (React 19 + Vite + TS) + frontend/ (contracts) │
+│  - Dashboard UI (promote/contradict/decay)                      │
+│  - State machine (proposed → suggested → active → decayed)      │
+│  - Mock + live API client (ApiDataProvider)                     │
+│  - Contract tests (pytest, 11 passing)                          │
+└───────────────────────────────┬─────────────────────────────────┘
+                                │ REST / JSON contracts (v1)
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Knowledge Pipeline Layer                     │
+│  knowledge/ (Python + FastAPI)                                  │
+│  - InMemoryGraph + vector store                                 │
+│  - Ingestion (prompt/JSONL/heuristic)                           │
+│  - Write policies (cluster/dedupe/conflict/score/decay)         │
+│  - Candidate API (GET/POST /candidates/*) — critical path       │
+│  - Eval harness (YAML cases, deterministic checks)              │
+└───────────────────────────────┬─────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                 Capture & Infrastructure Layer                  │
+│  session-capture/ (Go) + infra/ (AWS CDK)                       │
+│  - claude+ PTY wrapper → JSONL → DynamoDB                       │
+│  - Sessions table (CDK)                                         │
+│  - Eval runners + metrics endpoint                              │
+└─────────────────────────────────────────────────────────────────┘
+```
 
-## Project: LLM-Shield
+**Integration contracts are the source of truth** — see `docs/integration/candidate-api-v1.md` and `docs/integration/eval-metrics-v1.md`.
 
-### Classification: Open-Source Enterprise Security Architecture### Author: Senior AI Architect / Scrum Master (GS-15 Portfolio Artifact)
+---
 
-## 1. Architectural Philosophy: AI-Native & AI-First LLM-Shield bypasses legacy web patterns by deploying an **AI-Native Software Architecture**. Rather than acting as a standard wrapper with bolt-on analytics, the codebase is structurally organized around the **Model Context Protocol (MCP)** and unified data validation schemas. The architecture is explicitly designed to be read, maintained, and safely extended by developer tooling like Cursor, Codex, and automated AI agents.
+## 3. Layered Component Breakdown
 
+### A. Dashboard & Human Gate (`frontend-react/`, `frontend/`)
+- React 19 + Vite + TypeScript SPA with modern tooling (Vitest, Testing Library).
+- Python contract layer (`frontend/`) provides Pydantic models, state machine, mock data, and `ApiDataProvider` (stdlib urllib, retry logic).
+- Supports mock mode (for rapid demo) and live mode (toggle to real candidate API).
+- Enforces provenance on every `Candidate`; handles contradiction pairs and decay.
 
-┌──────────────────────────────────────────────┐
-│ Client Interface (Web / CLI) │
-└──────────────────────┬───────────────────────┘
-│
-v
-┌──────────────────────────────────────────────┐
-│ Unified Multi-Model Gateway │
-└──────────────────────┬───────────────────────┘
-│
-┌─────────────────────────────────┼────────────────────────────────┐
-│ │ │
-v v v
-┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-│ OpenAI Adapter │ │ Claude Adapter │ │DeepSeek Adapter │
-└────────┬────────┘ └────────┬────────┘ └────────┬────────┘
-│ │ │
-└─────────────────────────────────┼────────────────────────────────┘
-│
-v
-┌──────────────────────────────────────────────┐
-│ Observability & Policy Interceptor Layer │
-│ - Compliance Checks - Cost Tracking │
-│ - PII Sanitization - Telemetry Engine │
-└──────────────────────┬───────────────────────┘
-│
-v
-┌──────────────────────────────────────────────┐
-│ Cryptographic Proof-of-Work Verification │
-│ (Signed Report Generator: JSON / Markdown) │
-└──────────────────────────────────────────────┘
+### B. ML & Knowledge Pipeline (`knowledge/`)
+- Core abstractions: `KnowledgeGraph` ABC, `InMemoryGraph`, vector-backed variants.
+- Ingestion pipeline with pluggable ingestors.
+- Write policies enforce clustering, deduplication, conflict detection, scoring, and decay before any write.
+- FastAPI `serve/` module exposes the candidate REST API (auth, store, pipeline adapter).
+- `knowledge/evals/` contains YAML case definitions, `FakeRunner`, `ClaudeCodeRunner`, and deterministic structural checks.
 
+### C. Capture, Eval & Infra (`session-capture/`, `infra/`, `knowledge/evals/`)
+- Python capture layer (capture.py): subprocess wrapper for session JSONL logging, optional boto3 DynamoDB.
+- Eval harness with FakeRunner + real ClaudeCodeRunner (--real, system prompt injection).
+- Metrics endpoint and paired runs deliver compounding proof.
 
-## 2. Layered Component Breakdown
+---
 
-### A. The Ingestion & Client Interface
-Accepts user prompts, target criteria metrics, and desired testing parameters. Operates via an ephemeral, clean frontend dashboard or direct headless CLI triggers.
+## 4. Technology Stack & Deployment Topology
 
-### B. The Unified Multi-Model Gateway (The M.I.L.E. Core)
-An asynchronous factory engine that leverages standardized wrappers for heterogenous model APIs. It maps variable payloads (e.g., system roles, temp configurations across OpenAI, Gemini, Claude, Grok, DeepSeek) into a singular, predictable structural contract.
+- **Frontend:** React 19, Vite, TypeScript, Vitest, React Testing Library, Tailwind (implied modern UI).
+- **Backend Contracts & KG:** Python 3.12+, uv, Pydantic, FastAPI, pytest, ruff, mypy.
+- **Capture:** Python (subprocess + JSONL; Go/DynamoDB optional future).
+- **Infra:** AWS CDK (DynamoDB), Render.com (recommended zero-config deploy via Dockerfile + render.yaml).
+- **Local Dev:** Docker 24+, `uv sync --dev`, `npm install` in `frontend-react/`.
+- **IDE / Agent Compatibility:** Strict typing, modular schemas, and docstrings optimized for Cursor, Claude, and automated agents via MCP-friendly patterns.
+- **CI/CD:** `.gitlab-ci.yml` with SAST + secret detection (extend for full test/build/deploy gates).
 
-### C. The Observability & Policy Interceptor Layer
-A non-blocking proxy engine that analyzes streaming responses in flight.
-*   **PII & Compliance Scrubbing:** Validates inputs/outputs against federal safety thresholds before transmission.
-*   **Telemetry Monitor:** Measures exact Time-To-First-Token (TTFT), complete transaction lifecycle duration, and raw financial spend based on hardcoded token pricing dictionaries.
+**Local Portability:** Single `Dockerfile` + `render.yaml` for instant deploy; `uv run` or `docker compose` for local.
 
-### D. Cryptographic Proof-of-Work Engine
-Saves evaluation histories into structured metadata. Generates an encrypted hash of the verification payload, offering government compliance officers undeniable, tamper-evident proof that a frontier model meets operational safety limits.
+---
 
-## 3. Technology Stack & Deployment Topology
-*   **Runtime Environment:** Python 3.11 / FastAPI (High-performance, asynchronous handling of concurrent model streaming streams).
-*   **IDE Compatibility:** Formatted with strict type hinting, modular schemas, and detailed docstrings to ensure fluid integration with agentic code assistants (Cursor, Claude, OpenAI).
-*   **Infrastructure Hosting:** Zero-downtime micro-service deployment config optimized for [Render.com](https://render.com).
-*   **Local Portability Blueprint:** Fully containerized utilizing a minimal footprint Docker engine.
+## 5. Security, Compliance & Failure Modes
 
-## 4. Production Security & Failure Modes
-*   **Circuit-Breaking Protocols:** If an external endpoint throws a 429 (Rate Limit) or 503 (Unavailable), the individual execution loop breaks instantly without leaking state or stopping parallel tests.
-*   **Stateless Sovereignty:** The system runs strictly inside volatile memory. No user inputs, prompt context data, or model keys persist post-execution loop, ensuring immediate alignment with federal data sovereignty requirements.
+- **Human-Gate Enforcement:** No graph mutation without explicit human decision; full decision provenance stored.
+- **Contract Isolation:** Prevents accidental coupling; enables independent pillar evolution.
+- **Stateless Sovereignty (where possible):** Session capture writes to DynamoDB; KG is in-memory for the lite scope (production would add persistent vector store).
+- **Circuit Breaking & Resilience:** Dashboard gracefully degrades to mock data if candidate API is unavailable.
+- **Eval Determinism:** All checks are replayable; no hidden randomness in promotion decisions.
+- **Known Gaps (pre-demo):** Live candidate server not yet in-repo; root pytest requires `PYTHONPATH=frontend`; no full CI pipeline yet.
+
+---
+
+*This document is the canonical architecture reference. It supersedes all prior LLM-Shield or legacy diagrams. Last updated: 2026-06-21 (aligned to AUDIT.md and current pillar implementations).*

@@ -49,6 +49,18 @@
 
 ---
 
+## Beat 4 — GitHub Hook & PR Recreation (1 min)
+
+**Visual:** Terminal showing `python -m knowledge.evals.github_hook` or POST to `/ingest/github` with the `github_pr_event.json` fixture.
+
+**Spoken:**
+> "Learning moments often arrive via PRs or tickets. Dominic's GitHub hook ingests a simulated PR payload, extracts the quirk, and creates a candidate with full provenance.  
+> The new eval case `quirky_pr_exhaustive_switch` replays the exact diff from the PR fixture."
+
+**Action:** Call the ingest/github route or run the hook module; show the created candidate and the new case in the registry.
+
+---
+
 ## Close (0.5 min)
 
 > "Dominic's pillar turns the interview claim into reality: the eval harness and integration layer rigorously prove PRAXIS delivers ≥50% fewer corrections with compounding gains.  

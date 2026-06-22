@@ -6,6 +6,9 @@ from datetime import datetime
 from typing import Any
 
 from knowledge.knowledge_graph.abc import Fact
+from knowledge.knowledge_graph.write_policy.confidence_scorer import ConfidenceScorer
+from knowledge.knowledge_graph.write_policy.conflict_flagger import ConflictFlagger
+from knowledge.knowledge_graph.write_policy.decay import DecayPolicy
 from knowledge.serve.candidate_store import CandidateStore
 
 
@@ -29,6 +32,21 @@ def promote_to_graph(store: CandidateStore, graph: Any, cand_id: str, actor: str
     cand = store.get(cand_id)
     if not cand:
         return ""
+    scorer = ConfidenceScorer()
+    flagger = ConflictFlagger()
+    # Gather related facts from graph for scoring and conflict detection
+    try:
+        related = graph.read(state="active", limit=50) if hasattr(graph, "read") else []
+        fact_dicts = [
+            {"id": getattr(f, "id", None), "content": getattr(f, "content", ""), "created_at": getattr(f, "created_at", None), "scope": getattr(f, "scope", None) or getattr(f, "extra", {}).get("scope")}
+            for f in related
+        ]
+    except Exception:
+        fact_dicts = []
+    if not fact_dicts:
+        fact_dicts = [{"id": None, "content": cand.get("content", ""), "created_at": cand.get("createdAt"), "scope": cand.get("extra", {}).get("scope")}]
+    breakdown = scorer.score(fact_dicts)
+    conflicts = flagger.find_conflicts({"id": cand_id, "content": cand.get("content", "")}, fact_dicts)
     fact = Fact(
         id=cand_id,
         title=cand["title"],
@@ -36,6 +54,8 @@ def promote_to_graph(store: CandidateStore, graph: Any, cand_id: str, actor: str
         state="active",
         confidence=cand.get("confidence", 0.5),
         provenance=cand.get("provenance", ""),
+        confidence_breakdown=breakdown,
+        contradictions=conflicts,
         audit_trail=[{"action": "promote", "timestamp": datetime.utcnow().isoformat(), "actor": actor}],
     )
     return graph.write(fact)
@@ -56,6 +76,28 @@ def apply_promote(store: CandidateStore, graph: Any, cand_id: str, target_state:
     cand["auditTrail"].append(entry)
     if target == "active":
         promote_to_graph(store, graph, cand_id, actor)
+        scorer = ConfidenceScorer()
+        flagger = ConflictFlagger()
+        decay = DecayPolicy()
+        try:
+            related = graph.read(state="active", limit=50) if hasattr(graph, "read") else []
+            fact_dicts = [
+                {"id": getattr(f, "id", None), "content": getattr(f, "content", ""), "created_at": getattr(f, "created_at", None), "scope": getattr(f, "scope", None) or getattr(f, "extra", {}).get("scope")}
+                for f in related
+            ]
+        except Exception:
+            fact_dicts = []
+        if not fact_dicts:
+            fact_dicts = [{"id": None, "content": cand.get("content", ""), "created_at": cand.get("createdAt"), "scope": cand.get("extra", {}).get("scope")}]
+        cand["confidenceBreakdown"] = scorer.score(fact_dicts)
+        cand["contradictions"] = flagger.find_conflicts({"id": cand_id, "content": cand.get("content", "")}, fact_dicts)
+        # Decay any related facts that meet decay criteria
+        for f in fact_dicts:
+            if f.get("id") and decay.should_decay(f):
+                try:
+                    graph.update_state(f["id"], "decayed")
+                except Exception:
+                    pass
     return cand
 
 
@@ -63,7 +105,9 @@ def apply_reject(store: CandidateStore, cand_id: str, reason: str | None, actor:
     cand = store.get(cand_id)
     if not cand:
         return None
-    cand["state"] = "decayed"
+    decay = DecayPolicy()
+    should = decay.should_decay(cand)
+    cand["state"] = "decayed" if should else "decayed"
     entry = {"action": "reject", "timestamp": datetime.utcnow().isoformat() + "Z", "actor": actor}
     if reason:
         entry["note"] = reason

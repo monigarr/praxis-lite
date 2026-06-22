@@ -15,10 +15,12 @@ from uuid import uuid4
 from fastapi import Depends, FastAPI, Header, HTTPException, Query
 from pydantic import BaseModel, Field
 
+from knowledge.evals import github_hook
 from knowledge.knowledge_graph import InMemoryGraph
 from knowledge.serve.auth import get_current_user, require_org
 from knowledge.serve.candidate_store import CandidateStore
 from knowledge.serve.pipeline_adapter import apply_promote, apply_reject, apply_resolve, to_candidate
+from knowledge.wiring import build_trio
 
 app = FastAPI(title="PRAXIS Candidate API", version="1.0.0")
 
@@ -161,28 +163,62 @@ def ingest_jsonl(
     _contract: None = Depends(require_contract),
 ) -> dict[str, Any]:
     require_org(current_user, org)
+    trio = build_trio(ingestor_type="jsonl")
+    ingestor = trio["ingestor"]
     created = 0
     ids: list[str] = []
     provs: list[str] = []
     for f in payload.files:
         content = f.get("content", "")
-        for line in content.splitlines():
-            if line.strip():
-                cid = str(uuid4())
-                _store.create(
-                    {
-                        "id": cid,
-                        "title": line[:80],
-                        "content": line,
-                        "state": "proposed",
-                        "confidence": 0.6,
-                        "provenance": f.get("name", "ingest") + ":1",
-                    }
-                )
-                created += 1
-                ids.append(cid)
-                provs.append(f.get("name", "ingest") + ":1")
+        name = f.get("name", "ingest")
+        insights = ingestor.ingest(content, provenance=name)
+        for ins in insights:
+            cid = ins.id
+            _store.create(
+                {
+                    "id": cid,
+                    "title": ins.title,
+                    "content": ins.content,
+                    "state": "proposed",
+                    "confidence": ins.confidence,
+                    "provenance": ins.provenance,
+                }
+            )
+            created += 1
+            ids.append(cid)
+            provs.append(ins.provenance)
     return {"candidatesCreated": created, "candidateIds": ids, "provenance": provs}
+
+
+class GitHubWebhookPayload(BaseModel):
+    action: str | None = None
+    pull_request: dict[str, Any] | None = None
+    quirk: str | None = None
+    diff: str | None = None
+
+
+@app.post("/ingest/github", response_model=dict[str, Any])
+def ingest_github(
+    payload: GitHubWebhookPayload,
+    current_user=Depends(get_current_user),
+    org: str = Header("default", alias="X-Praxis-Org"),
+    _contract: None = Depends(require_contract),
+) -> dict[str, Any]:
+    require_org(current_user, org)
+    seed = github_hook.extract_seed_prompt(payload.model_dump())
+    insight = github_hook.extract_seeded_insight(payload.model_dump()) or seed
+    cid = str(uuid4())
+    _store.create(
+        {
+            "id": cid,
+            "title": (seed or "GitHub PR")[:80],
+            "content": insight,
+            "state": "proposed",
+            "confidence": 0.65,
+            "provenance": f"github:{payload.action or 'webhook'}",
+        }
+    )
+    return {"candidatesCreated": 1, "candidateIds": [cid], "provenance": [f"github:{payload.action or 'webhook'}"]}
 
 
 _EVAL_RESULTS = Path(__file__).parent.parent / "evals" / "results" / "baseline.jsonl"

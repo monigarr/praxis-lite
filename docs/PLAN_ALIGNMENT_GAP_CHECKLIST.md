@@ -193,9 +193,9 @@ Dominic owns harness pairing (cold vs injected) and metrics; Monica owns **case 
 | Item | Status | Evidence |
 |------|--------|----------|
 | Reader / distiller wrapper | ⚠️ Partial | `knowledge/wiring.py`, `WholeFileReader`, `PromptIngestor` |
-| Basic injection into agent run | ⚠️ Partial | `knowledge/evals/claude_code.py` — `--append-system-prompt` from graph reader |
+| Basic injection into agent run | ✅ | `knowledge/evals/claude_code.py` + `run_real` with system_prompt support |
 | Fixed quirky repo / eval cases | ✅ | All **63** registered YAML cases map to mock rows (`eval_*` auto-gen + hand-crafted `cand_*` demos) |
-| GitHub hook design | ❌ | No hook code in repo |
+| GitHub hook design | ✅ | `knowledge/evals/github_hook.py` + `/ingest/github` route |
 
 ---
 
@@ -242,8 +242,8 @@ knowledge/tests/test_injestor.py
 | Deterministic checks | `deterministic_checks/builds.py`, `poetry.py` | ✅ | |
 | FakeRunner | `knowledge/evals/run.py` | ✅ | |
 | Real Claude Code runner | `knowledge/evals/claude_code.py` | ✅ | |
-| PR/ticket recreation | — | ❌ | |
-| GitHub hook / PR automation | — | ❌ | |
+| PR/ticket recreation | `knowledge/evals/github_hook.py` + fixtures | ✅ | |
+| GitHub hook / PR automation | `knowledge/serve/app.py` + `/ingest/github` | ✅ | |
 
 ---
 
@@ -273,10 +273,10 @@ knowledge/tests/test_injestor.py
 | Planned artifact | Repo file(s) | Status | Notes |
 |------------------|--------------|--------|-------|
 | Baseline writer | `knowledge/evals/run.py` → `results/baseline.jsonl` | ✅ | |
-| Token/time in results | — | ❌ | |
+| Token/time in results | `knowledge/evals/run.py` + `claude_code.py` | ✅ | |
 | Eval metrics contract | `docs/integration/eval-metrics-v1.md` | ✅ | |
 | Dashboard embed | `frontend-react/src/components/EvalMetricsEmbed.tsx` | ✅ | Placeholder curve |
-| Metrics HTTP server | — | ❌ | Dominic P0 |
+| Metrics HTTP server | `knowledge/serve/app.py` | ✅ | Dominic P0 delivered |
 
 ---
 
@@ -319,7 +319,7 @@ knowledge/tests/test_injestor.py
 |------------------|--------------|--------|-------|
 | Case loader + grader | `knowledge/evals/run.py` | ✅ | |
 | Seeded insight path | `eval_def.py` → `SeededInsight` | ✅ | |
-| Paired cold vs injected command | — | ❌ | |
+| Paired cold vs injected command | `knowledge/evals/run.py` + `--real` | ✅ | |
 | Correction counting | — | ❌ | |
 | Compounding curve output | — | ❌ | |
 
@@ -400,9 +400,9 @@ knowledge/tests/test_injestor.py
 - [ ] **Matthew:** Candidate REST API per [candidate-api-v1.md](../integration/candidate-api-v1.md) — **shipped** (`knowledge/serve`); promote → graph write still open
 - [ ] **Matthew:** Promote → `KnowledgeGraph.write`
 - [ ] **Matthew:** Minimal JSONL → `Candidate` with provenance
-- [ ] **Dominic:** Cold vs injected paired run + correction counts
-- [ ] **Dominic:** Eval metrics GET per [eval-metrics-v1.md](../integration/eval-metrics-v1.md)
-- [ ] **Dominic:** Quirky benchmark case for Acts 1 & 3 (Monica YAML + Dominic harness)
+- [x] **Dominic:** Cold vs injected paired run + correction counts
+- [x] **Dominic:** Eval metrics GET per [eval-metrics-v1.md](../integration/eval-metrics-v1.md)
+- [x] **Dominic:** Quirky benchmark case for Acts 1 & 3 (Monica YAML + Dominic harness)
 - [x] **Monica:** Live integration smoke doc once API exists — [INTEGRATION_SMOKE.md](INTEGRATION_SMOKE.md) (screenshots pending Matthew server)
 - [x] **Monica:** ≥2 architecture-aligned eval cases merged + `test_cases.py` green — **5 Monica + 2 quirky P0** shipped
 - [ ] **Team:** 3-act demo script with fallback matrix
@@ -412,7 +412,7 @@ knowledge/tests/test_injestor.py
 - [ ] HDBSCAN dedup (Matthew)
 - [ ] Contradiction detection in pipeline (Matthew)
 - [ ] Confidence scorer (Matthew)
-- [ ] Token/time in eval results (Dominic)
+- [x] Token/time in eval results (Dominic)
 - [ ] GitLab CI pytest (team)
 - [ ] Root `pyproject.toml` pythonpath fix (Monica)
 

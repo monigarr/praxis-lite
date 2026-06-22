@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+import re
 from typing import Any, Iterable
 from uuid import uuid4
 
@@ -17,17 +19,30 @@ class StructuredDistillIngestor(Ingestor):
         texts = [source] if isinstance(source, str) else list(source)
         insights: list[Insight] = []
         for t in texts:
-            # Prompt stub — real impl would parse JSON from LLM
-            distilled = self.llm.complete(f"Distill lesson: {t}\nReturn JSON with when,lesson,scope,evidence.")
+            raw = self.llm.complete(
+                "Extract a single learning moment as compact JSON: "
+                '{"when":"<when>","lesson":"<lesson>","scope":"<scope>","evidence":"<evidence>"}. '
+                f"Input: {t}"
+            )
+            parsed = self._parse_json(raw) or {}
             insights.append(
                 Insight(
                     id=str(uuid4()),
-                    title=distilled[:60],
-                    content=distilled,
+                    title=(parsed.get("lesson") or t)[:60],
+                    content=parsed.get("lesson") or raw,
                     provenance=kwargs.get("provenance", "distill"),
-                    when="recent",
-                    scope="general",
-                    evidence=t[:200],
+                    when=parsed.get("when"),
+                    scope=parsed.get("scope"),
+                    evidence=parsed.get("evidence") or t[:200],
                 )
             )
         return insights
+
+    def _parse_json(self, text: str) -> dict[str, Any] | None:
+        try:
+            m = re.search(r"\{.*\}", text, re.S)
+            if m:
+                return json.loads(m.group(0))
+        except Exception:
+            pass
+        return None

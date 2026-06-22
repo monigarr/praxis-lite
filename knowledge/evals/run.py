@@ -17,6 +17,7 @@ import yaml
 
 from knowledge.evals.deterministic_checks import REGISTRY
 from knowledge.evals.eval_def import EvalCase, SeededInsight
+from knowledge.evals.claude_code import run_paired_real, run_real
 from knowledge.wiring import build_trio
 
 RESULTS_DIR = Path(__file__).parent / "results"
@@ -115,8 +116,9 @@ def _append_result(result: EvalResult) -> None:
         f.write(json.dumps(asdict(result)) + "\n")
 
 
-def run_paired(case_id: str) -> tuple[EvalResult, EvalResult]:
-    """Run the same case cold then injected. Returns (cold, injected)."""
+def run_paired(case_id: str, real: bool = False) -> tuple[EvalResult, EvalResult]:
+    if real:
+        return run_paired_real(case_id)
     case = load_case(case_id)
     cold = run_fake(case, injected=False)
     injected = run_fake(case, injected=True)
@@ -129,15 +131,19 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("case_id", nargs="?", default="example_add_function")
     parser.add_argument("--paired", action="store_true")
+    parser.add_argument("--real", action="store_true")
     args = parser.parse_args()
 
     if args.paired:
-        cold, inj = run_paired(args.case_id)
+        cold, inj = run_paired(args.case_id, real=args.real)
         print(f"COLD: passed={cold.passed} corrections={cold.correction_count}")
         print(f"INJECTED: passed={inj.passed} corrections={inj.correction_count}")
     else:
         case = load_case(args.case_id)
-        res = run_fake(case, injected=bool(case.seeded_insight))
+        if args.real:
+            res = run_real(case, injected=bool(case.seeded_insight))
+        else:
+            res = run_fake(case, injected=bool(case.seeded_insight))
         print(json.dumps(asdict(res), indent=2))
 
 

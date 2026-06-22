@@ -14,7 +14,7 @@ npm run lint
 npm run build
 ```
 
-- [x] Automated gate green (2026-06-19) — pytest + Vitest + build
+- [x] Automated gate green (2026-06-21) — pytest + Vitest (10+ React tests) + build + lint
 - [x] Mock export script: `python scripts/export-mock-candidates.py` (18 candidates incl. `cand_18`)
 - [x] React UX: full card text, created date, decayed messaging, promote confirm copy
 

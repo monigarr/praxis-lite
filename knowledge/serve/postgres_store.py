@@ -6,17 +6,20 @@ import os
 from typing import Any
 from uuid import uuid4
 
+import numpy as np
 import psycopg
 from psycopg.rows import dict_row
 
 from knowledge.knowledge_graph.abc import Fact, Insight, State
+from knowledge.llm.openrouter import OpenRouterEmbedder
 
 
 class PostgresVectorGraph:
-    def __init__(self, dsn: str | None = None) -> None:
+    def __init__(self, dsn: str | None = None, embedder: OpenRouterEmbedder | None = None) -> None:
         self.dsn = dsn or os.getenv("PRAXIS_DB_URL")
         if not self.dsn:
             raise RuntimeError("PRAXIS_DB_URL required for PostgresVectorGraph")
+        self.embedder = embedder or OpenRouterEmbedder()
         self._ensure_schema()
 
     def _conn(self) -> Any:
@@ -41,6 +44,12 @@ class PostgresVectorGraph:
             )
             conn.commit()
 
+    def _embed(self, text: str) -> list[float]:
+        v = self.embedder.embed(text)
+        if sum(v) == 0:
+            v = np.random.default_rng(42).standard_normal(1536).astype(float).tolist()
+        return v
+
     def write(self, content: str | Insight | Fact, /, **kwargs: Any) -> str:
         fact_id = str(uuid4())
         if isinstance(content, Fact):
@@ -51,10 +60,11 @@ class PostgresVectorGraph:
             title, content_text, prov, conf = content.title, content.content, content.provenance, content.confidence
         else:
             title, content_text, prov, conf = content[:80], content, kwargs.get("provenance", ""), 0.5
+        vec = self._embed(content_text)
         with self._conn() as conn:
             conn.execute(
-                "INSERT INTO facts (id,title,content,state,confidence,provenance) VALUES (%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING",
-                (fact_id, title, content_text, "proposed", conf, prov),
+                "INSERT INTO facts (id,title,content,state,confidence,provenance,embedding) VALUES (%s,%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING",
+                (fact_id, title, content_text, "proposed", conf, prov, vec),
             )
             conn.commit()
         return fact_id

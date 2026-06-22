@@ -1,0 +1,13 @@
+{
+  "action": "opened",
+  "pull_request": {
+    "id": 987654,
+    "title": "Fix TypeScript exhaustive switch",
+    "body": "Addresses quirk: exhaustive union without never check",
+    "diff_url": "https://example.com/diff/987654",
+    "head": {"ref": "fix/exhaustive"},
+    "base": {"ref": "main"}
+  },
+  "quirk": "exhaustive union without never check in default",
+  "diff": "--- a/src/handleEvent.ts\n+++ b/src/handleEvent.ts\n@@ -10,6 +10,7 @@ export function handleEvent(e: Event) {\n   case 'click': return handleClick(e);\n   case 'key': return handleKey(e);\n-  default: return;\n+  default: { const _exhaustive: never = e; return _exhaustive; }\n }"
+}

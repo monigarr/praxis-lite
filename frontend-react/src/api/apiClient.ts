@@ -1,23 +1,30 @@
 import type { Candidate, PromotionState } from "./candidateModel";
 import { candidateFromMapping } from "./candidateModel";
 
-const BASE = import.meta.env.VITE_PRAXIS_API_BASE_URL ?? "";
-const TOKEN = import.meta.env.VITE_PRAXIS_API_TOKEN ?? "";
-const ORG = import.meta.env.VITE_PRAXIS_ORG_ID ?? "default";
+function getBase(): string {
+  return import.meta.env.VITE_PRAXIS_API_BASE_URL ?? "";
+}
+function getToken(): string {
+  return import.meta.env.VITE_PRAXIS_API_TOKEN ?? "";
+}
+function getOrg(): string {
+  return import.meta.env.VITE_PRAXIS_ORG_ID ?? "default";
+}
 
 function headers() {
   const h: Record<string, string> = {
     Accept: "application/json",
     "Content-Type": "application/json",
     "X-Praxis-Contract": "1",
-    "X-Praxis-Org": ORG,
+    "X-Praxis-Org": getOrg(),
   };
-  if (TOKEN) h.Authorization = `Bearer ${TOKEN}`;
+  const token = getToken();
+  if (token) h.Authorization = `Bearer ${token}`;
   return h;
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, { ...init, headers: { ...headers(), ...init?.headers } });
+  const res = await fetch(`${getBase()}${path}`, { ...init, headers: { ...headers(), ...init?.headers } });
   if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
   return res.json() as Promise<T>;
 }

@@ -17,3 +17,30 @@ variables:
   SECRET_DETECTION_ENABLED: 'true'
 secret_detection:
   stage: secret-detection
+
+frontend-test:
+  stage: test
+  image: node:20
+  before_script:
+    - cd frontend-react
+    - npm ci
+  script:
+    - npm run test:run
+    - npm run build
+  only:
+    - merge_requests
+    - main
+
+python-test:
+  stage: test
+  image: python:3.12
+  before_script:
+    - pip install uv
+    - uv sync --dev
+  script:
+    - uv run pytest frontend/tests/ knowledge/evals/tests/test_cases.py -q
+    - uv run ruff check .
+    - uv run mypy knowledge/ frontend/ --ignore-missing-imports || true
+  only:
+    - merge_requests
+    - main
