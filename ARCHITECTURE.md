@@ -46,8 +46,10 @@ Key principles:
 ┌─────────────────────────────────────────────────────────────────┐
 │                 Capture & Infrastructure Layer                  │
 │  session-capture/ (Go) + infra/ (AWS CDK)                       │
-│  - claude+ PTY wrapper → JSONL → DynamoDB                       │
-│  - Sessions table (CDK)                                         │
+│  - claude+ PTY wrapper (POSIX + Windows ConPTY)                 │
+│  - fsnotify JSONL tailer + monotonic-seq emitter                │
+│  - FileSink (always on) + optional DynamoDBSink (best-effort)   │
+│  - PraxisSessionsTableStack (CDK, PAY_PER_REQUEST)              │
 │  - Eval runners + metrics endpoint                              │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -72,7 +74,9 @@ Key principles:
 - `knowledge/evals/` contains YAML case definitions, `FakeRunner`, `ClaudeCodeRunner`, and deterministic structural checks.
 
 ### C. Capture, Eval & Infra (`session-capture/`, `infra/`, `knowledge/evals/`)
-- Python capture layer (capture.py): subprocess wrapper for session JSONL logging, optional boto3 DynamoDB.
+- Go `claude+` session-capture daemon (`session-capture/cmd/claude+`): cross-platform pseudo-terminal wrapper (POSIX PTY + Windows ConPTY via `aymanbagabas/go-pty`), fsnotify-based JSONL tailer over Claude Code's per-session transcript, monotonic-`seq` event emitter, local rolling JSONL `FileSink` (always on), and optional best-effort `DynamoDBSink` (only when `PRAXIS_SESSIONS_TABLE` resolves + AWS credentials available).
+- AWS CDK `PraxisSessionsTableStack` (`infra/lib/sessions-table-stack.ts`) provisions the `praxis-sessions` DynamoDB table (PAY_PER_REQUEST, point-in-time recovery, `RemovalPolicy.RETAIN`).
+- Legacy Python `capture.py` (`knowledge/evals/`) is retained as a no-Go dev fallback used by the eval harness.
 - Eval harness with FakeRunner + real ClaudeCodeRunner (--real, system prompt injection).
 - Metrics endpoint and paired runs deliver compounding proof.
 
@@ -82,7 +86,7 @@ Key principles:
 
 - **Frontend:** React 19, Vite, TypeScript, Vitest, React Testing Library, Tailwind (implied modern UI).
 - **Backend Contracts & KG:** Python 3.12+, uv, Pydantic, FastAPI, pytest, ruff, mypy.
-- **Capture:** Python (subprocess + JSONL; Go/DynamoDB optional future).
+- **Capture:** Go `claude+` daemon (cross-platform PTY via `aymanbagabas/go-pty` + `fsnotify` JSONL tailer + `aws-sdk-go-v2` DynamoDB sink); legacy Python `subprocess+JSONL` (`knowledge/evals/capture.py`) retained as fallback.
 - **Infra:** AWS CDK (DynamoDB), Render.com (recommended zero-config deploy via Dockerfile + render.yaml).
 - **Local Dev:** Docker 24+, `uv sync --dev`, `npm install` in `frontend-react/`.
 - **IDE / Agent Compatibility:** Strict typing, modular schemas, and docstrings optimized for Cursor, Claude, and automated agents via MCP-friendly patterns.
@@ -96,7 +100,7 @@ Key principles:
 
 - **Human-Gate Enforcement:** No graph mutation without explicit human decision; full decision provenance stored.
 - **Contract Isolation:** Prevents accidental coupling; enables independent pillar evolution.
-- **Stateless Sovereignty (where possible):** Session capture writes to DynamoDB; KG is in-memory for the lite scope (production would add persistent vector store).
+- **Stateless Sovereignty (where possible):** Session capture writes to a local rolling JSONL sink, with an optional best-effort DynamoDB mirror; KG is in-memory for the lite scope (production would add persistent vector store).
 - **Circuit Breaking & Resilience:** Dashboard gracefully degrades to mock data if candidate API is unavailable.
 - **Eval Determinism:** All checks are replayable; no hidden randomness in promotion decisions.
 - **Known Gaps (pre-demo):** Live candidate server not yet in-repo; root pytest requires `PYTHONPATH=frontend`; no full CI pipeline yet.

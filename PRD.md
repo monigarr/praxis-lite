@@ -50,7 +50,7 @@ PRAXIS is organized around three independent pillars with clear ownership and in
 
 ## 4. Core Functional Features
 
-- **Session Capture & Persistence:** Go `claude+` PTY wrapper tails JSONL, writes to DynamoDB (infra + session-capture pillars).
+- **Session Capture & Persistence:** Shipped Go `claude+` daemon ([`session-capture/`](session-capture/)) — cross-platform PTY (POSIX + Windows ConPTY), fsnotify JSONL tailer, monotonic-seq event emitter, local rolling JSONL `FileSink` (always on) + best-effort `DynamoDBSink` (opt-in via `PRAXIS_SESSIONS_TABLE`), CDK `PraxisSessionsTableStack` in [`infra/`](infra/).
 - **Knowledge Graph & Ingestion:** InMemoryGraph + vector store, prompt/JSONL/heuristic ingestors, clustering, deduplication, conflict detection, scoring, and decay policies.
 - **Candidate API (v1):** `GET/POST /candidates/*` contract for proposing, listing, and promoting candidates (FastAPI in `knowledge/serve/`).
 - **Human Gate Dashboard (React 19 + Vite):** Interactive review UI supporting promote, contradict (pairwise), decay, and state-machine visualization. Toggle between mock and live API modes.

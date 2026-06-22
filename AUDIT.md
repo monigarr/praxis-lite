@@ -160,10 +160,11 @@ Harness is runnable via `uv run python knowledge/run.py` or `python -m knowledge
 
 #### Session capture (`session-capture/`)
 
-- Go `claude+` daemon: PTY host, session multiplexer, JSONL tailer, DynamoDB writer
-- CDK stack provisions `praxis-sessions` table
-- **Local blocker:** `go` not installed on audit machine — Go tests not executed
-- Third-party `vt10x` vendored with upstream TODOs (acceptable for capstone scope)
+- Go `claude+` daemon: cross-platform PTY (POSIX + Windows ConPTY via `aymanbagabas/go-pty`), fsnotify JSONL tailer with rotation detection, monotonic-`seq` emitter, local rolling JSONL `FileSink` (always on), opt-in best-effort `DynamoDBSink` (`aws-sdk-go-v2`)
+- Hermetic tests: `go test ./...` shells out to `echo` (POSIX) / `cmd.exe` (Windows) instead of `claude`, no Anthropic creds in CI
+- `infra/lib/sessions-table-stack.ts` (CDK v2): `praxis-sessions` table, PAY_PER_REQUEST, point-in-time recovery, `RemovalPolicy.RETAIN`
+- GitLab CI: `go-test` + `go-build` jobs added on `golang:1.22-bookworm` images
+- No vendored `vt10x` — raw PTY passthrough is sufficient for the JSONL-driven distillation pipeline; screen-state replay can be added behind the existing `Sink` contract
 
 #### Infra (`infra/`)
 
@@ -204,7 +205,7 @@ Contracts are **well-defined** and **client-implemented**:
 | Knowledge | `pytest knowledge -q` | **39 passed** |
 | Frontend | `PYTHONPATH=frontend pytest frontend/tests -q` | **11 passed** |
 | Root (default) | `pytest knowledge frontend/tests -q` | **2 collection errors** (frontend imports) |
-| Go (session-capture) | `go test ./...` | **Not run** — Go toolchain absent |
+| Go (session-capture) | `cd session-capture && go test ./... -race` | Hermetic — exercised in GitLab CI via the `go-test` job |
 
 ### Root pytest failure (actionable)
 
@@ -225,7 +226,7 @@ Or document that all contributors must run frontend tests from `frontend/` with 
 |------|-------|-----|
 | `ApiDataProvider` HTTP | None | No mock server / `responses` harness |
 | React UI | None | Vitest covers contract + mock workflow; no browser E2E |
-| Session capture Go | Unknown | Requires Go install |
+| Session capture Go | 7 unit tests in `session-capture/internal/capture/daemon_test.go` (FileSink roundtrip, MultiSink fan-out, tailer appends, daemon smoke, Dynamo fake, emitter monotonic) | Hermetic; runs under GitLab `go-test` job |
 | End-to-end loop | None | No single test: ingest → candidate → promote → eval |
 
 ---
@@ -318,9 +319,16 @@ npm run dev
 $env:PRAXIS_EVAL_REAL = "0"
 uv run python knowledge/run.py
 
-# Session capture (requires Go + AWS)
-cd infra; npm install; npm run deploy
-cd ../session-capture/wrapper; go build -o claude+ ./cmd/claude-plus
+# Session capture daemon (local, no AWS required)
+cd session-capture
+go mod download
+go build -o claude+ ./cmd/claude+
+./claude+ -version
+
+# Optional: provision DynamoDB sessions table
+cd ../infra
+npm install
+npx cdk deploy PraxisSessionsTableStack
 ```
 
 ---
@@ -331,8 +339,8 @@ cd ../session-capture/wrapper; go build -o claude+ ./cmd/claude-plus
 |------|------------------------------------------------------|
 | `frontend/` | 17 Python |
 | `knowledge/` | 29 Python |
-| `session-capture/wrapper/` | ~50 Go (incl. internal; excl. `third_party/vt10x`) |
-| `infra/` | 2 TypeScript |
+| `session-capture/` | 7 Go (1 cmd + 5 internal + 1 test) + Dockerfile + README |
+| `infra/` | 2 TypeScript (CDK stack + entrypoint) + 3 config (package.json, tsconfig.json, cdk.json) + README |
 | `docs/integration/fixtures/` | 4 JSON fixtures |
 
 **Total automated tests:** 50 Python (39 knowledge + 11 frontend).

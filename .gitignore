@@ -69,3 +69,18 @@ docker-compose.override.yml
 *.bak
 *.tmp
 .cache/
+
+# Go session-capture daemon
+session-capture/claude+
+session-capture/claude+.exe
+session-capture/bin/
+session-capture/*.test
+session-capture/coverage.out
+
+# AWS CDK (infra/)
+infra/cdk.out/
+infra/node_modules/
+infra/dist/
+
+# Local session capture output (per-user)
+.praxis/

@@ -104,7 +104,7 @@ flowchart TD
 |--------|----------|----------|----------------|
 | **Dashboard & Human Gate** | `frontend-react/`, `frontend/` | High (demo-ready on mock) | React 19 + Vite dashboard, Python contract layer, mock/live API client, state machine (`proposed → suggested → active → decayed`) |
 | **ML & Knowledge Pipeline** | `knowledge/` | Scaffolding (core graph + ingest live) | InMemoryGraph + vector, Ingestors (prompt/JSONL/heuristic), write policies (cluster/dedupe/conflict/score/decay), FastAPI candidate service |
-| **Architecture, Eval & Integration** | `knowledge/evals/`, `session-capture/`, `infra/` | Partial (Lite: Python equiv delivered) | YAML-driven eval harness + deterministic checks + Python capture.py (subprocess/JSONL + optional DynamoDB) + real ClaudeCodeRunner with --real flag; Go/DynamoDB/CDK remain future |
+| **Architecture, Eval & Integration** | `knowledge/evals/`, `session-capture/`, `infra/` | Complete | YAML-driven eval harness + deterministic checks + Go `claude+` daemon (cross-platform PTY via `aymanbagabas/go-pty`, fsnotify JSONL tailer, local file sink + optional DynamoDB sink) + AWS CDK `SessionsTableStack`. Python `capture.py` remains as a legacy dev fallback. |
 
 **Integration contracts** (v1) are the source of truth:
 - `docs/integration/candidate-api-v1.md`
@@ -127,8 +127,10 @@ praxis-lite/
 │   ├── graph_reader/          # WholeFileReader, retrieving variants
 │   ├── evals/                 # YAML cases, FakeRunner, ClaudeCodeRunner, deterministic checks
 │   └── run.py                 # Dev entrypoint (build_trio + eval smoke)
-├── session-capture/           # Go claude+ daemon (PTY, JSONL tail, DynamoDB writer)
-├── infra/                     # AWS CDK (DynamoDB sessions table)
+├── session-capture/           # Go claude+ daemon — cross-platform PTY + JSONL tailer + local/Dynamo sinks
+│   ├── cmd/claude+/           # CLI entrypoint
+│   └── internal/capture/      # daemon, pty, tailer, sink, dynamo + tests
+├── infra/                     # AWS CDK (DynamoDB sessions table) — PraxisSessionsTableStack
 ├── docs/                      # Plans, integration contracts, fixtures, wire-up guides
 ├── scripts/                   # Utility scripts
 ├── .env.example
@@ -148,7 +150,7 @@ praxis-lite/
 - **Node.js**: 18+ and npm (for `frontend-react/`)
 - **Docker**: 24+ (for containerized runs or Render)
 - **Git**: For cloning and contributing
-- **Optional**: Go 1.21+ (to build/test `session-capture/`), AWS CLI + CDK (for `infra/`)
+- **Optional**: Go 1.22+ (to build/test `session-capture/`), AWS CLI + CDK (for `infra/`)
 
 **Hardware baseline** (dev laptop reference): Intel i9-12900H, 64 GB RAM, NVIDIA RTX 3080 (for local LLM evals if desired).
 
@@ -394,7 +396,8 @@ Report vulnerabilities via private GitLab issue or monigarr@monigarr.com.
 | React can't reach API | CORS or wrong `VITE_PRAXIS_API_BASE_URL` | Check browser console; set env and restart Vite |
 | 409 on promote | Concurrent candidate edit | Client auto-refreshes list |
 | Docker CMD does nothing useful | Placeholder in Dockerfile | Update to real service entrypoint |
-| Go tests skipped | `go` not installed | Install Go 1.21+ or skip `session-capture/` locally |
+| Go tests skipped | `go` not installed | Install Go 1.22+ or skip `session-capture/` locally; CI runs them automatically |
+| `claude+` ConPTY error on Windows | New ConPTY edge cases on this Windows build | Re-run with `PRAXIS_CAPTURE_NO_PTY=1` (still captures via stdio) |
 | Render deploy fails | Dockerfile not updated for web service | Align `CMD` with uvicorn or multi-stage |
 
 **Health check command**: `curl http://localhost:8000/health` (implement when adding router).
@@ -443,6 +446,7 @@ See `docs/plans/PRAXIS_Project_Plan.html` §Capstone Alignment and `PLAN_ALIGNME
 - Eval metrics HTTP endpoint for dashboard embed (done)
 - React unit tests + CI gate (done — 10+ Vitest tests + GitLab job)
 - Production Dockerfile + health/readiness probes (partially done)
+- Go `claude+` session-capture daemon + CDK SessionsTableStack (done — see [session-capture/](session-capture/) and [infra/](infra/))
 - Compounding-curve measurement harness (next)
 
 **Longer-term**:

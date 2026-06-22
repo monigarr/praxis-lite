@@ -44,3 +44,29 @@ python-test:
   only:
     - merge_requests
     - main
+
+go-test:
+  stage: test
+  image: golang:1.22-bookworm
+  before_script:
+    - cd session-capture
+    - go mod download
+  script:
+    - go vet ./...
+    - go test ./... -race -count=1
+  only:
+    - merge_requests
+    - main
+
+go-build:
+  stage: test
+  image: golang:1.22-bookworm
+  before_script:
+    - cd session-capture
+    - go mod download
+  script:
+    - go build -o claude+ ./cmd/claude+
+    - ./claude+ -version
+  only:
+    - merge_requests
+    - main
