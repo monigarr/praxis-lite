@@ -2,15 +2,17 @@
 
 from __future__ import annotations
 
-from typing import Any, Literal
+import os
+from typing import Any
 
-from knowledge.knowledge_graph.abc import Fact, Insight, KnowledgeGraph, State
+from knowledge.knowledge_graph.abc import KnowledgeGraph, State
 
 
 class CandidateStore:
     def __init__(self, graph: KnowledgeGraph) -> None:
         self.graph = graph
         self._candidates: dict[str, dict[str, Any]] = {}
+        self._use_postgres = bool(os.getenv("PRAXIS_DB_URL"))
 
     def create(self, data: dict[str, Any]) -> str:
         cid = data.get("id") or str(__import__("uuid").uuid4())
